@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Cylinder.h"
-
+#include "Csegment.h"
+#include "Entity1.h"
 namespace globals
 {
 	using std::make_shared;
@@ -25,13 +26,9 @@ namespace globals
 
 		polyhedrons = std::vector<shared_ptr<Polyhedron>>
 		{
-			make_shared<Cylinder>(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), glm::vec3(0,0,0)),
-			make_shared<Cylinder>(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), glm::vec3(0,0,0)),
-			make_shared<Cylinder>(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), glm::vec3(0,0,0))
+			make_shared<Csegment>(glm::vec3(0, 0, 0), glm::vec3(5, 5, 5), 0.1)
 		};
-
-
-		//polyhedrons.push_back(make_shared<Platform>(glm::vec3(10, 1.5, 10), glm::vec3(-50 + i * 10, -4, -50 + j * 10), 100));
+		polyhedrons.push_back(make_shared<Entity1>(dynamic_cast<Csegment*>(polyhedrons.back().get())));
 
 	}
 }

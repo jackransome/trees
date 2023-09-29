@@ -6,6 +6,9 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
+
 void Graphics::init() {
 	initWindow();
 	initVulkan();
@@ -1855,7 +1858,7 @@ void Graphics::loadModel(const char* path, glm::vec4 colour, glm::vec3 scale)
 void Graphics::loadModels()
 {
 	loadModel("models/cylinder.obj", glm::vec4(0.3, 0.8, 0.3, 1), glm::vec3(1, 1, 1));
-	loadModel("models/test3.obj", glm::vec4(0.2, 0.4, 0.9, 1), glm::vec3(1));
+	loadModel("models/cube.obj", glm::vec4(0.2, 0.4, 0.9, 1), glm::vec3(1));
 	loadModel("models/xyzOrigin.obj", glm::vec4(0.1, 0.9, 0.1, 1), glm::vec3(1));
 	loadModel("models/small_sphere.obj", glm::vec4(0.7, 0.9, 0.1, 1), glm::vec3(1));
 	loadModel("models/testUV.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1));
@@ -1934,11 +1937,15 @@ void Graphics::scaleObject(int objectIndex, glm::vec3 scale) {
 
 void Graphics::recalculateObjectMatrix(int objectIndex)
 {
+
+	glm::vec3 rotation = objects[objectIndex].rotation;
+	glm::quat quaternion = glm::quat(glm::radians(rotation));
+	glm::mat4 rotationMatrix = glm::mat4_cast(quaternion);
+
 	objects[objectIndex].transformData = glm::translate(glm::mat4(1.0f), objects[objectIndex].position);
-	objects[objectIndex].transformData = glm::rotate(objects[objectIndex].transformData, glm::radians(objects[objectIndex].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));  // Rotation around x-axis
-	objects[objectIndex].transformData = glm::rotate(objects[objectIndex].transformData, glm::radians(objects[objectIndex].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));  // Rotation around y-axis
-	objects[objectIndex].transformData = glm::rotate(objects[objectIndex].transformData, glm::radians(objects[objectIndex].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));  // Rotation around z-axis
+	objects[objectIndex].transformData *= rotationMatrix;
 	objects[objectIndex].transformData = glm::scale(objects[objectIndex].transformData, objects[objectIndex].scale);
+
 }
 
 //Object* Graphics::addObject(float x, float y, float z, int modelIndex) {

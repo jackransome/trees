@@ -7,7 +7,5 @@ Cylinder::Cylinder(glm::vec3 position, glm::vec3 dimensions, glm::vec3 rotation)
 }
 
 void Cylinder::perLoop(){
-	rotation.y += 1;
-	scale.y += 0.1;
 	updateVkObjectState();
 }

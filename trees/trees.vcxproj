@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Csegment.cpp" />
     <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="Entity1.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="input.cpp" />
@@ -27,7 +29,9 @@
     <ClCompile Include="Polyhedron.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Csegment.h" />
     <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="Entity1.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />

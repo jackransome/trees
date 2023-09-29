@@ -14,16 +14,13 @@ const bool debug = false;
 int main()
 {
 	using std::make_shared;
-
+	glm::vec3 camPos = glm::vec3(0, 0, 0);
 	try
 	{
 		typedef std::chrono::high_resolution_clock Time;
 		typedef std::chrono::microseconds us;
 
 		globals::globalInit();
-
-
-
 
 		auto currentTime = time_point_cast<us>(Time::now());
 		double accumulator = 0.0;
@@ -47,8 +44,31 @@ int main()
 					polyhedron->perLoop();
 				}
 
-				globals::gfx.setCameraPos(glm::vec3(5,5,5));
-
+				//globals::gfx.setCameraPos(camPos);
+				if (globals::input.keys.keyCounts["w"] >= 1)
+				{
+					camPos.x+=0.1;
+				}
+				if (globals::input.keys.keyCounts["a"] >= 1)
+				{
+					camPos.z += 0.1;
+				}
+				if (globals::input.keys.keyCounts["s"] >= 1)
+				{
+					camPos.x -= 0.1;
+				}
+				if (globals::input.keys.keyCounts["d"] >= 1)
+				{
+					camPos.z -= 0.1;
+				}
+				if (globals::input.keys.keyCounts["q"] >= 1)
+				{
+					camPos.y += 0.1;
+				}
+				if (globals::input.keys.keyCounts["e"] >= 1)
+				{
+					camPos.y -= 0.1;
+				}
 
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)
 				{
