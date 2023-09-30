@@ -39,6 +39,12 @@
     <ClCompile Include="Entity1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="World_generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision_detection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -60,6 +66,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Entity1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World_generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision_detection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

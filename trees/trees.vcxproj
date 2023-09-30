@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Collision_detection.cpp" />
     <ClCompile Include="Csegment.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Entity1.cpp" />
@@ -27,8 +28,10 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Polyhedron.cpp" />
+    <ClCompile Include="World_generator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collision_detection.h" />
     <ClInclude Include="Csegment.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Entity1.h" />
@@ -36,6 +39,7 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Polyhedron.h" />
+    <ClInclude Include="World_generator.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

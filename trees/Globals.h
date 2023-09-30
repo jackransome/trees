@@ -1,6 +1,7 @@
 #include "Graphics.h"
 #include "Input.h"
 #include "Polyhedron.h"
+#include "Collision_detection.h"
 
 namespace globals
 {

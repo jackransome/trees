@@ -9,6 +9,7 @@ Entity1::Entity1(Csegment* startingSegment) : Polyhedron(glm::vec3(0,0,0), glm::
 	segment = startingSegment;
 	planeDirection = glm::vec2(1, 0);
 	planeDirectionRight = glm::vec2(0, 1);
+	type = entity;
 }
 
 void Entity1::perLoop(){
@@ -38,7 +39,19 @@ void Entity1::perLoop(){
 	{
 		planePos -= 0.01f * planeDirectionRight;
 	}
-	
+	if (globals::input.keys.keyCounts["space"] == 1 && onGround)
+	{
+		hVel = 0.015;
+	}
+	height += hVel;
+	hVel -= 0.0005;
+	if (height <= 0) {
+		height = 0;
+		onGround = true;
+	}
+	else {
+		onGround = false;
+	}
 	if (planePos.y > segmentBounds.y) {
 		planePos.y = segmentBounds.y;
 	}
@@ -66,8 +79,6 @@ void Entity1::perLoop(){
 	glm::vec3 right = glm::normalize(glm::cross(forward, up));
 	glm::vec3 cameraAngle = globals::input.cameraAngle;
 	glm::vec3 newUp = up;
-
-	//std::cout << up.x << " | " << up.y << " | " << up.z << "\n";
 
 	// ------ rotating the forward vector
 
@@ -109,15 +120,32 @@ void Entity1::perLoop(){
 	// Convert the result back to a vec3 and return it
 	newUp = glm::vec3(rotatedVec4);
 
-	position = segment->convertPlaneToRealCoords(planePos);
-
-
-	globals::gfx.setCameraManually(position + up * 0.2f, position + result, up);
-
-
-	
-	
+	position = segment->convertPlaneToRealCoords(planePos) + up*height;
+	cameraFrom = position + up * 0.2f;
+	cameraTo = position + result;
+	globals::gfx.setCameraManually(cameraFrom, cameraTo, up);
+	//std::cout << globals::input.cameraAngle.x << " | " << globals::input.cameraAngle.y << "\n";
 	updateVkObjectState();
+}
+
+void Entity1::changeSegment(Csegment* _segment){
+	segment = _segment;
+	segmentBounds = segment->getPlaneDims();
+	globals::input.cameraAngle = segment->getNewCameraAngle(cameraFrom, cameraTo, planePos.x);
+}
+
+Csegment* Entity1::getSegment()
+{
+	return segment;
+}
+
+void Entity1::setHeight(float _height){
+	height = _height;
+	hVel = 0;
+}
+
+void Entity1::setPlanePos(glm::vec2 _planePos){
+	planePos = _planePos;
 }
 
 glm::vec2 Entity1::correctPlanePos(glm::vec2 _planePos)

@@ -5,6 +5,9 @@
 
 //for testing
 #include <thread>
+#include "Globals.h"
+#include "Csegment.h"
+#include "Entity1.h"
 
 using std::chrono::time_point_cast;
 using std::chrono::duration_cast;
@@ -19,7 +22,7 @@ int main()
 	{
 		typedef std::chrono::high_resolution_clock Time;
 		typedef std::chrono::microseconds us;
-
+		
 		globals::globalInit();
 
 		auto currentTime = time_point_cast<us>(Time::now());
@@ -39,35 +42,24 @@ int main()
 				globals::gfx.setCameraAngle(globals::input.cameraAngle);
 				globals::input.run();
 
-				for (auto polyhedron : globals::polyhedrons)
-				{
-					polyhedron->perLoop();
-				}
-
-				//globals::gfx.setCameraPos(camPos);
-				if (globals::input.keys.keyCounts["w"] >= 1)
-				{
-					camPos.x+=0.1;
-				}
-				if (globals::input.keys.keyCounts["a"] >= 1)
-				{
-					camPos.z += 0.1;
-				}
-				if (globals::input.keys.keyCounts["s"] >= 1)
-				{
-					camPos.x -= 0.1;
-				}
-				if (globals::input.keys.keyCounts["d"] >= 1)
-				{
-					camPos.z -= 0.1;
-				}
-				if (globals::input.keys.keyCounts["q"] >= 1)
-				{
-					camPos.y += 0.1;
-				}
-				if (globals::input.keys.keyCounts["e"] >= 1)
-				{
-					camPos.y -= 0.1;
+				for (int i = 0; i < globals::polyhedrons.size(); i++) {
+					for (int j = 0; j < globals::polyhedrons.size(); j++) {
+						if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == c_seg) {
+							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
+							Csegment* cseg = dynamic_cast<Csegment*>(globals::polyhedrons[j].get());
+							Csegment* currcseg = ent->getSegment();
+							if (cseg != currcseg) {
+								float distance = Collision_detection::getDistanceFromSeg(ent->position, cseg->getStart(), cseg->getEnd(), cseg->getDiameter());
+								if (distance < Collision_detection::getDistanceFromSeg(ent->position, currcseg->getStart(), currcseg->getEnd(), currcseg->getDiameter())) {
+									ent->setPlanePos(cseg->convertRealCoordsToPlane(ent->position));
+									ent->changeSegment(cseg);
+									ent->setHeight(0);
+									
+								}
+							}
+						}
+					}
+					globals::polyhedrons[i]->perLoop();
 				}
 
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)

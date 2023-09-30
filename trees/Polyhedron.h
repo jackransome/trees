@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 
+enum polyType {entity, c_seg};
 
 class Polyhedron
 {
@@ -12,7 +13,7 @@ public:
 	glm::vec3 scale{ 0, 0, 0 };
 	glm::vec3 rotation{ 0, 0, 0 };
 
-
+	polyType type;
 	explicit Polyhedron(glm::vec3 position, glm::vec3 scale, glm::vec3 rotation);
 
 	virtual void perLoop() = 0;
