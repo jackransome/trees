@@ -12,6 +12,7 @@ public:
 	glm::vec3 convertPlaneToRealCoords(glm::vec2 planeCoords);
 	glm::vec3 convertPlaneToNormal(float planeX);
 	glm::vec3 convertPlaneToDirection(glm::vec2 planeCoords, glm::vec2 planeDirection);
+	glm::vec3 getDirectionNormalized();
 private:
 	glm::vec3 start;
 	glm::vec3 end;

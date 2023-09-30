@@ -1,21 +1,48 @@
 #include "Entity1.h"
 #include <glm/gtx/quaternion.hpp>
 
-Entity1::Entity1(Csegment* startingSegment) : Polyhedron(glm::vec3(0,0,0), glm::vec3(0.1, 0.1, 0.1), glm::vec3(0, 0, 0)) {
+Entity1::Entity1(Csegment* startingSegment) : Polyhedron(glm::vec3(0,0,0), glm::vec3(0.04, 0.04, 0.04), glm::vec3(0, 0, 0)) {
 	vkObjectIndex = globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 1);
 	planePos = glm::vec2(0, 0);
 	segmentBounds = startingSegment->getPlaneDims();
 	position = startingSegment->convertPlaneToRealCoords(planePos);
 	segment = startingSegment;
 	planeDirection = glm::vec2(1, 0);
+	planeDirectionRight = glm::vec2(0, 1);
 }
 
 void Entity1::perLoop(){
 	//planePos.y += 0.1;
 	//planePos.x += 0.1;
+
+
+	
+	//setting direction according to mouse
+	directionAngle = globals::input.cameraAngle.x + 3.14159265359 / 2;
+	planeDirection = glm::vec2(std::cos(directionAngle), std::sin(directionAngle));
+	planeDirectionRight = glm::vec2(std::cos(directionAngle + 3.14159265359 / 2), std::sin(directionAngle + 3.14159265359 / 2));
+	//controls
+	if (globals::input.keys.keyCounts["w"] >= 1)
+	{
+		planePos += 0.01f*planeDirection;
+	}
+	if (globals::input.keys.keyCounts["a"] >= 1)
+	{
+		planePos += 0.01f * planeDirectionRight;
+	}
+	if (globals::input.keys.keyCounts["s"] >= 1)
+	{
+		planePos -= 0.01f * planeDirection;
+	}
+	if (globals::input.keys.keyCounts["d"] >= 1)
+	{
+		planePos -= 0.01f * planeDirectionRight;
+	}
+	
 	if (planePos.y > segmentBounds.y) {
 		planePos.y = segmentBounds.y;
-	} else if (planePos.y < 0) {
+	}
+	else if (planePos.y < 0) {
 		planePos.y = 0;
 	}
 	if (planePos.x > segmentBounds.x) {
@@ -24,34 +51,85 @@ void Entity1::perLoop(){
 	else if (planePos.x < 0) {
 		planePos.x += segmentBounds.x;
 	}
-	if (globals::input.keys.keyCounts["w"] >= 1)
-	{
-		planePos += 0.02f*planeDirection;
-	}
-	if (globals::input.keys.keyCounts["a"] >= 1)
-	{
-		directionAngle += 0.05;
-	}
-	if (globals::input.keys.keyCounts["s"] >= 1)
-	{
-		planePos -= 0.02f * planeDirection;
-	}
-	if (globals::input.keys.keyCounts["d"] >= 1)
-	{
-		directionAngle -= 0.05;
-	}
-	planeDirection = glm::vec2(std::cos(directionAngle), std::sin(directionAngle));
 
 
-	glm::vec3 initialDirection = glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f));  // Assuming initial direction is along x-axis
-	glm::quat rotationQuat = glm::rotation(initialDirection, glm::normalize(segment->convertPlaneToNormal(planePos.x)));
-	glm::mat4 rotationMat = glm::mat4_cast(rotationQuat);
-	glm::vec3 eulerAngles = glm::eulerAngles(rotationQuat);
+	rotation.x += 30;
+	rotation.y += 60;
+	rotation.z += 90;
 
-	//rotation = glm::degrees(eulerAngles);
-	//position += segment->convertPlaneToNormal(planePos.x)
-	position = segment->convertPlaneToRealCoords(planePos) += segment->convertPlaneToNormal(planePos.x)/3.0f;
-	globals::gfx.setCameraPos(position);
+	
+
+	//camera
+
+	glm::vec3 forward = segment->getDirectionNormalized();
+	glm::vec3 up = segment->convertPlaneToNormal(planePos.x);
+	glm::vec3 right = glm::normalize(glm::cross(forward, up));
+	glm::vec3 cameraAngle = globals::input.cameraAngle;
+	glm::vec3 newUp = up;
+
+	//std::cout << up.x << " | " << up.y << " | " << up.z << "\n";
+
+	// ------ rotating the forward vector
+
+	// Create a rotation matrix using the axis and the angle
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.y, right);
+
+	// Multiply the vector by the rotation matrix
+	glm::vec4 rotatedVec4 = rotationMatrix * glm::vec4(forward, 1.0f);
+
+	// Convert the result back to a vec3 and return it
+	glm::vec3 result = glm::vec3(rotatedVec4);
+
+	// Create a rotation matrix using the axis and the angle
+	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.x, up);
+
+	// Multiply the vector by the rotation matrix
+	rotatedVec4 = rotationMatrix * glm::vec4(result, 1.0f);
+
+	// Convert the result back to a vec3 and return it
+	result = glm::vec3(rotatedVec4);
+
+	// ------ rotating the up vector
+
+	// Create a rotation matrix using the axis and the angle
+	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.y, right);
+
+	// Multiply the vector by the rotation matrix
+	rotatedVec4 = rotationMatrix * glm::vec4(newUp, 1.0f);
+
+	// Convert the result back to a vec3 and return it
+	newUp = glm::vec3(rotatedVec4);
+
+	// Create a rotation matrix using the axis and the angle
+	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.x, up);
+
+	// Multiply the vector by the rotation matrix
+	rotatedVec4 = rotationMatrix * glm::vec4(newUp, 1.0f);
+
+	// Convert the result back to a vec3 and return it
+	newUp = glm::vec3(rotatedVec4);
+
+	position = segment->convertPlaneToRealCoords(planePos);
+
+
+	globals::gfx.setCameraManually(position + up * 0.2f, position + result, up);
+
+
+	
 	
 	updateVkObjectState();
+}
+
+glm::vec2 Entity1::correctPlanePos(glm::vec2 _planePos)
+{
+	if (_planePos.y > segmentBounds.y) {
+		_planePos.y = segmentBounds.y;
+	}
+	else if (_planePos.y < 0) {
+		_planePos.y = 0;
+	}
+	if (_planePos.x > segmentBounds.x) {
+		_planePos.x -= segmentBounds.x;
+	}
+	return _planePos;
 }

@@ -1528,23 +1528,30 @@ void Graphics::createSyncObjects() {
 
 void Graphics::updateUniformBuffer(uint32_t currentImage) {
 
-	direction = glm::vec3(
-		cos(cameraAngle.y) * sin(cameraAngle.x),
-		sin(cameraAngle.y),
-		cos(cameraAngle.y) * cos(cameraAngle.x)
-	);
-
-	right = glm::vec3(
-		sin(cameraAngle.x - 3.14f / 2.0f),
-		0,
-		cos(cameraAngle.x - 3.14f / 2.0f)
-	);
-
-	up = glm::cross(right, direction);
-
 	UniformBufferObject ubo = {};
-	float zoom = 4;
-	ubo.view = glm::lookAt(cameraPosition - direction * zoom, cameraPosition, up);
+	if (cameraModeManual) {
+		ubo.view = glm::lookAt(cameraFrom, cameraTo, cameraUp);
+	}
+	else {
+		direction = glm::vec3(
+			cos(cameraAngle.y) * sin(cameraAngle.x),
+			sin(cameraAngle.y),
+			cos(cameraAngle.y) * cos(cameraAngle.x)
+		);
+
+		right = glm::vec3(
+			sin(cameraAngle.x - 3.14f / 2.0f),
+			0,
+			cos(cameraAngle.x - 3.14f / 2.0f)
+		);
+
+		up = glm::cross(right, direction);
+
+		
+		float zoom = 4;
+		ubo.view = glm::lookAt(cameraPosition - direction * zoom, cameraPosition, up);
+	}
+
 
 	ubo.proj = glm::perspective(glm::radians(FOV), swapChainExtent.width / (float)swapChainExtent.height, 0.001f, 1000.0f);
 	ubo.proj[1][1] *= -1;
@@ -1581,8 +1588,8 @@ void Graphics::drawFrame() {
 		throw std::runtime_error("failed to acquire swap chain image!");
 	}
 
-	//WHAT IS THIS
-	objects[0].transformData = glm::translate(glm::mat4(1.0f), cameraPosition);
+	//WHAT IS THIS (camera orb)
+	//objects[0].transformData = glm::translate(glm::mat4(1.0f), cameraPosition);
 	updateUniformBuffer(imageIndex);
 	updateStorageBuffer();
 	createCommandBuffers();
@@ -1857,7 +1864,7 @@ void Graphics::loadModel(const char* path, glm::vec4 colour, glm::vec3 scale)
 }
 void Graphics::loadModels()
 {
-	loadModel("models/cylinder.obj", glm::vec4(0.3, 0.8, 0.3, 1), glm::vec3(1, 1, 1));
+	loadModel("models/cylinder2.obj", glm::vec4(0.3, 0.8, 0.3, 1), glm::vec3(1, 1, 1));
 	loadModel("models/cube.obj", glm::vec4(0.2, 0.4, 0.9, 1), glm::vec3(1));
 	loadModel("models/xyzOrigin.obj", glm::vec4(0.1, 0.9, 0.1, 1), glm::vec3(1));
 	loadModel("models/small_sphere.obj", glm::vec4(0.7, 0.9, 0.1, 1), glm::vec3(1));
@@ -1865,7 +1872,7 @@ void Graphics::loadModels()
 }
 
 void Graphics::loadObjects() {
-	addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 3);
+	addObject(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 3);
 }
 
 void Graphics::setUpCamera() {
@@ -1982,6 +1989,13 @@ void Graphics::setObjectsWireFrame(bool value)
 	{
 		object.wireFrame = value;
 	}
+}
+
+void Graphics::setCameraManually(glm::vec3 from, glm::vec3 to, glm::vec3 up){
+	cameraFrom = from;
+	cameraTo = to;
+	cameraUp = up;
+	cameraModeManual = true;
 }
 
 void Graphics::clearStorageBuffer()

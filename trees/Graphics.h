@@ -174,7 +174,13 @@ public:
 
 	void setObjectsWireFrame(bool value);
 
+	void setCameraManually(glm::vec3 from, glm::vec3 to, glm::vec3 up);
+
 private:
+
+	bool cameraModeManual = false;
+
+	glm::vec3 cameraFrom, cameraTo, cameraUp = glm::vec3(0, 0, 0);
 
 	std::vector<Model> models;
 
@@ -184,8 +190,8 @@ private:
 
 	int sizeOfAllModels = 0;
 
-	const int WIDTH = 2500;
-	const int HEIGHT = 1400;
+	const int WIDTH = 1920;
+	const int HEIGHT = 1080;
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 
 	bool freeLook = false;

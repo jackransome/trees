@@ -17,14 +17,15 @@ void Input::run() {
 	glfwGetCursorPos(windowPointer, &xpos, &ypos);
 	if (inFocus) {
 		glfwSetCursorPos(windowPointer, windowWidth / 2, windowHeight / 2);
-		cameraAngle.x += 0.003f * float(windowWidth / 2 - xpos);
-		cameraAngle.y += 0.003f * float(windowHeight / 2 - ypos);
-		if (cameraAngle.y < -3.14f / 2.0f) {
-			cameraAngle.y = -3.14f / 2.0f;
+		internalCameraAngle.x += 0.003f * float(windowWidth / 2 - xpos);
+		internalCameraAngle.y += 0.003f * float(windowHeight / 2 - ypos);
+		if (internalCameraAngle.y < -3.14f / 2.0f) {
+			internalCameraAngle.y = -3.14f / 2.0f;
 		}
-		if (cameraAngle.y > 3.14f / 2.0f) {
-			cameraAngle.y = 3.14f / 2.0f;
+		if (internalCameraAngle.y > 3.14f / 2.0f) {
+			internalCameraAngle.y = 3.14f / 2.0f;
 		}
+		cameraAngle = internalCameraAngle;
 		glfwSetInputMode(windowPointer, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 		keys.updateCounts();

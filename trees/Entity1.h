@@ -11,4 +11,6 @@ private:
 	Csegment* segment;
 	float directionAngle = 0;
 	glm::vec2 planeDirection;
+	glm::vec2 planeDirectionRight;
+	glm::vec2 correctPlanePos(glm::vec2 _planePos);
 };

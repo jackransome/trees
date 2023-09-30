@@ -110,6 +110,7 @@ public:
 	void run();
 	double xpos, ypos;
 	glm::vec3 cameraAngle = glm::vec3(0, 0, 0);
+	glm::vec3 internalCameraAngle = glm::vec3(0, 0, 0);
 	int windowWidth, windowHeight;
 	glm::vec2 mousePosInWindow;
 	void init(GLFWwindow* window);
