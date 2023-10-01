@@ -24,4 +24,6 @@ private:
 	//camera manual values:
 	glm::vec3 cameraFrom;
 	glm::vec3 cameraTo;
+	glm::vec3 cameraUp;
+	float speed = 0.01f;
 };

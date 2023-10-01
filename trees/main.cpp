@@ -41,20 +41,22 @@ int main()
 			{
 				globals::gfx.setCameraAngle(globals::input.cameraAngle);
 				globals::input.run();
-
+				bool switched = false;
 				for (int i = 0; i < globals::polyhedrons.size(); i++) {
 					for (int j = 0; j < globals::polyhedrons.size(); j++) {
-						if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == c_seg) {
-							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
-							Csegment* cseg = dynamic_cast<Csegment*>(globals::polyhedrons[j].get());
-							Csegment* currcseg = ent->getSegment();
-							if (cseg != currcseg) {
-								float distance = Collision_detection::getDistanceFromSeg(ent->position, cseg->getStart(), cseg->getEnd(), cseg->getDiameter());
-								if (distance < Collision_detection::getDistanceFromSeg(ent->position, currcseg->getStart(), currcseg->getEnd(), currcseg->getDiameter())) {
-									ent->setPlanePos(cseg->convertRealCoordsToPlane(ent->position));
-									ent->changeSegment(cseg);
-									ent->setHeight(0);
-									
+						if (!switched) {
+							if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == c_seg) {
+								Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
+								Csegment* cseg = dynamic_cast<Csegment*>(globals::polyhedrons[j].get());
+								Csegment* currcseg = ent->getSegment();
+								if (cseg != currcseg) {
+									float distance = Collision_detection::getDistanceFromSeg(ent->position, cseg->getStart(), cseg->getEnd(), cseg->getDiameter());
+									if (distance < Collision_detection::getDistanceFromSeg(ent->position, currcseg->getStart(), currcseg->getEnd(), currcseg->getDiameter())) {
+										ent->setPlanePos(cseg->convertRealCoordsToPlane(ent->position));
+										ent->changeSegment(cseg);
+										ent->setHeight(distance);
+										switched = true;
+									}
 								}
 							}
 						}

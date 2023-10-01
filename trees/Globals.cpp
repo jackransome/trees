@@ -27,7 +27,7 @@ namespace globals
 
 		polyhedrons = std::vector<shared_ptr<Polyhedron>>
 		{
-			make_shared<Csegment>(glm::vec3(100, 90, 90), glm::vec3(90, 95, 90), 0)
+			make_shared<Csegment>(glm::vec3(100, 100, 90), glm::vec3(100, 100, 100), 1)
 		};
 		glm::vec3 temp;
 		for (float i = 0; i < 1; i += 0.01) {

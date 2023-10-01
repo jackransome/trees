@@ -16,7 +16,7 @@ public:
 	glm::vec3 getDirectionNormalized();
 	glm::vec3 getStart();
 	glm::vec3 getEnd();
-	glm::vec3 getNewCameraAngle(glm::vec3 from, glm::vec3 to, float planeX);
+	glm::vec3 getNewCameraAngle(glm::vec3 direction, glm::vec3 up, float planeX);
 	float getDiameter();
 private:
 	glm::vec3 start;

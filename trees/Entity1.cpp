@@ -23,21 +23,26 @@ void Entity1::perLoop(){
 	planeDirection = glm::vec2(std::cos(directionAngle), std::sin(directionAngle));
 	planeDirectionRight = glm::vec2(std::cos(directionAngle + 3.14159265359 / 2), std::sin(directionAngle + 3.14159265359 / 2));
 	//controls
+	speed = 0.01f;
+	if (globals::input.keys.keyCounts["leftShift"] >= 1)
+	{
+		speed = 0.02f;
+	}
 	if (globals::input.keys.keyCounts["w"] >= 1)
 	{
-		planePos += 0.01f*planeDirection;
+		planePos += speed *planeDirection;
 	}
 	if (globals::input.keys.keyCounts["a"] >= 1)
 	{
-		planePos += 0.01f * planeDirectionRight;
+		planePos += speed * planeDirectionRight;
 	}
 	if (globals::input.keys.keyCounts["s"] >= 1)
 	{
-		planePos -= 0.01f * planeDirection;
+		planePos -= speed * planeDirection;
 	}
 	if (globals::input.keys.keyCounts["d"] >= 1)
 	{
-		planePos -= 0.01f * planeDirectionRight;
+		planePos -= speed * planeDirectionRight;
 	}
 	if (globals::input.keys.keyCounts["space"] == 1 && onGround)
 	{
@@ -123,6 +128,8 @@ void Entity1::perLoop(){
 	position = segment->convertPlaneToRealCoords(planePos) + up*height;
 	cameraFrom = position + up * 0.2f;
 	cameraTo = position + result;
+	cameraUp = newUp;
+	
 	globals::gfx.setCameraManually(cameraFrom, cameraTo, up);
 	//std::cout << globals::input.cameraAngle.x << " | " << globals::input.cameraAngle.y << "\n";
 	updateVkObjectState();
@@ -131,7 +138,7 @@ void Entity1::perLoop(){
 void Entity1::changeSegment(Csegment* _segment){
 	segment = _segment;
 	segmentBounds = segment->getPlaneDims();
-	globals::input.cameraAngle = segment->getNewCameraAngle(cameraFrom, cameraTo, planePos.x);
+	globals::input.cameraAngle = segment->getNewCameraAngle(cameraTo - cameraFrom, cameraUp, planePos.x);
 }
 
 Csegment* Entity1::getSegment()

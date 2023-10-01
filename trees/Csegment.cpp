@@ -3,7 +3,8 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
-
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 Csegment::Csegment(glm::vec3 _start, glm::vec3 _end, float _width) : Polyhedron(glm::vec3(0,0,0), glm::vec3(1, 1, 1), glm::vec3(0, 0, 0))
 {
@@ -69,7 +70,7 @@ glm::vec2 Csegment::convertRealCoordsToPlane(glm::vec3 realCoords)
 	glm::vec3 startToPoint = realCoords - start;
 
 	// Project startToPoint onto segVector
-	float projectionLength = glm::dot(startToPoint, glm::normalize(segVector));
+	float projectionLength = glm::dot(startToPoint, directionNormalized);
 
 	// If the projection falls outside the segment, return max float
 	if (projectionLength < 0 || projectionLength > glm::length(segVector)) {
@@ -83,24 +84,19 @@ glm::vec2 Csegment::convertRealCoordsToPlane(glm::vec3 realCoords)
 
 	//finding the x coord
 
-	glm::vec3 vecAB = glm::normalize(end - start);
-	glm::vec3 vecAC = glm::normalize(convertPlaneToRealCoords(glm::vec2(0,0)) - start);
-	glm::vec3 vecAD = glm::normalize(realCoords - start);
+	glm::vec3 A = directionNormalized;
+	glm::vec3 B = glm::normalize(convertPlaneToNormal(0));
+	glm::vec3 C = realCoords - start;
 
-	glm::vec3 crossProduct = glm::cross(vecAC, vecAD);
-	float dotProduct = glm::dot(vecAC, vecAD);
-
-	float angle = glm::degrees(glm::acos(glm::clamp(dotProduct, -1.0f, 1.0f)));  // Clamp to handle potential floating-point errors
-
-	// Determine the sign of the angle based on the direction of the cross product
-	float angleSign = glm::dot(crossProduct, vecAB) >= 0.0f ? 1.0f : -1.0f;
+	glm::vec3 projection = C - Collision_detection::projectOnto(C, A);
+	float angle = Collision_detection::getAngle(projection, glm::vec3(0, 0, 0), B);
+	glm::vec3 cross = glm::cross(A, B);
+	if (glm::dot(cross, projection) < 0) {
+		angle *= -1;
+	}
 	
-
-	angle = (angle * angleSign)*(2* 3.14159265359) / 360;
-
-	
-
 	float xCoord = 3.14159265359 * width * (angle / (2 * 3.14159265359));
+
 	return glm::vec2(xCoord, yCoord);
 }
 
@@ -144,24 +140,51 @@ glm::vec3 Csegment::getEnd()
 	return end;
 }
 
-glm::vec3 Csegment::getNewCameraAngle(glm::vec3 from, glm::vec3 to, float planeX){
+glm::vec3 Csegment::getNewCameraAngle(glm::vec3 direction, glm::vec3 up, float planeX){
+	//== do checks on the up's and correct
+	//get normal and startend
 
-	//finding the x angle first
-	glm::vec3 AD = to - from;
-	glm::vec3 AC = convertPlaneToNormal(planeX);
-	glm::vec3 AB = end - start;
-	glm::vec3 E = glm::cross(AB, AC);
-	glm::vec3 F = AD - Collision_detection::projectOnto(AD, E);
-	float alpha = Collision_detection::getAngle(AB, glm::vec3(0, 0, 0), F);
-	//std::cout << AB.x << "," << AB.y << "," << AB.z << "|" << F.x << "," << F.y << "," << F.z << "\n";
-	//std::cout << alpha << "|" << 3.141592 / 4 << "\n";
-	//std::cout << Collision_detection::getAngle(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	// directionNormalized
+	glm::vec3 normal = convertPlaneToNormal(planeX);
 
-	//now finding the y angle
-	glm::vec3 G = AD - Collision_detection::projectOnto(AD, AC);
-	float beta = Collision_detection::getAngle(AB, glm::vec3(0, 0, 0), G);
-	std::cout << beta << "|" << alpha << "\n";
-	return glm::vec3(beta, alpha, 0);
+	//get cross startend normal
+
+	glm::vec3 cross = glm::cross(normal, directionNormalized);
+
+	//project up onto the startend normal plane
+
+	glm::vec3 upProjection = up - Collision_detection::projectOnto(up, cross);
+
+	//get angle between startend and up with the rotational axis being cross startend and normal
+	float angle = glm::orientedAngle(directionNormalized, upProjection, cross);
+	//std::cout << "angle: " << angle << "\n";
+	if (angle > 0) { //too down
+		//rotate up by angle + 0.1
+		cross = glm::cross(direction, up);
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), angle + 0.1f, cross);
+		direction = glm::vec3(rotationMatrix * glm::vec4(direction, 1.0f));
+
+	}
+	else if (angle < -3.1415) {
+		//rotate down by -angle + 3.1415 + 0.1
+		cross = glm::cross(direction, up);
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), -float( - angle + 3.1415 + 0.1f), cross);
+		direction = glm::vec3(rotationMatrix * glm::vec4(direction, 1.0f));
+	}
+
+	//get result with correct vectors
+	glm::vec3 result = glm::vec3(Collision_detection::getRotationAngles(end - start, convertPlaneToNormal(planeX), direction), 0);
+	if (result.y < -3.14f / 2.0f) {
+		result.x += 3.1415;
+		result.y = -(3.1415 + result.y);
+		//std::cout << "<<<\n\n";
+	}
+	if (result.y > 3.14f / 2.0f) {
+		result.x += 3.1415;
+		result.y = 3.1415 - result.y;
+		//std::cout << ">>>\n\n";
+	}
+	return result;
 }
 
 float Csegment::getDiameter()
