@@ -141,15 +141,80 @@ glm::vec3 Csegment::getEnd()
 }
 
 glm::vec3 Csegment::getNewCameraAngle(glm::vec3 direction, glm::vec3 up, float planeX){
+
+	glm::vec3 normal = convertPlaneToNormal(planeX);
+	glm::vec3 cross = glm::cross(normal, directionNormalized);
+	float xAngle = 0;
+	float yAngle = 0;
+	if (glm::dot(up, normal) < 0) {
+		//if the up direction faces too down for this normal
+		if (glm::dot(direction, normal) < 0) {
+			// if the direction also faces down
+			glm::vec3 proj = up - Collision_detection::projectOnto(up, normal);
+			xAngle = Collision_detection::getAngle(directionNormalized, glm::vec3(0, 0, 0), proj);
+			if (dot(cross, proj) < 0) {
+				xAngle *= -1;
+			}
+			yAngle = -3.1514 / 2;
+			std::cout << "111\n";
+		}
+		else {
+			// if the direction faces up 
+			glm::vec3 proj = -up - Collision_detection::projectOnto(-up, normal);
+			xAngle = Collision_detection::getAngle(directionNormalized, glm::vec3(0, 0, 0), proj);
+			if (dot(cross, proj) < 0) {
+				xAngle *= -1;
+			}
+			yAngle = 3.1514 / 2;
+			std::cout << "222\n";
+		}
+	}
+	else {
+		std::cout << "333\n";
+
+		std::cout << "THIS: " << glm::dot(up, normal) << "\n";
+		std::cout << "THIS1: " << Collision_detection::getAngle(direction, glm::vec3(0, 0, 0), up) << "\n";
+		// get direction projected onto the directionNormalized / cross plane
+		glm::vec3 proj = direction - Collision_detection::projectOnto(direction, normal);
+		// get angle between directionNormalized and the projection
+		xAngle = Collision_detection::getAngle(directionNormalized, glm::vec3(0, 0, 0), proj);
+		// if the projection points in the opposite direction of the cross, flip because getAngle always returns a positive value
+		if (dot(cross, proj) < 0) {
+			xAngle *= -1;
+		}
+
+		// rotate direction around normal by -x Angle
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), -xAngle, normal);
+		glm::vec3 rotatedDirection = glm::vec3(rotationMatrix * glm::vec4(direction, 1.0f));
+
+		// get angle between rotateddirection and directionNormalized
+		yAngle = Collision_detection::getAngle(directionNormalized, glm::vec3(0, 0, 0), rotatedDirection);
+		
+		//flip if looking down because getAngle always returns a positive value
+		if (dot(direction, normal) < 0) {
+			yAngle *= -1;
+		}
+		std::cout << "A (" << directionNormalized.x << "," << directionNormalized.y << "," << directionNormalized.z << ")\n";
+		std::cout << "B (" << normal.x << "," << normal.y << "," << normal.z << ")\n";
+		std::cout << "C (" << direction.x << "," << direction.y << "," << direction.z << ")\n";
+		std::cout << "D (" << up.x << "," << up.y << "," << up.z << ")\n";
+		std::cout << "E (" << proj.x << "," << proj.y << "," << proj.z << ")\n";
+
+	}
+
+	
+	return glm::vec3(xAngle, yAngle, 0);
+
+
 	//== do checks on the up's and correct
 	//get normal and startend
 
 	// directionNormalized
-	glm::vec3 normal = convertPlaneToNormal(planeX);
+	//glm::vec3 normal = convertPlaneToNormal(planeX);
 
 	//get cross startend normal
 
-	glm::vec3 cross = glm::cross(normal, directionNormalized);
+	
 
 	//project up onto the startend normal plane
 

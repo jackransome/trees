@@ -25,5 +25,10 @@ private:
 	glm::vec3 cameraFrom;
 	glm::vec3 cameraTo;
 	glm::vec3 cameraUp;
+	glm::vec3 oldCameraFrom;
+	glm::vec3 oldCameraTo;
+	glm::vec3 oldCameraUp;
 	float speed = 0.01f;
+	bool switched = false;
+	float switchCounter = 0;
 };

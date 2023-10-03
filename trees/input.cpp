@@ -21,11 +21,11 @@ void Input::run() {
 		cameraAngle.y += 0.003f * float(windowHeight / 2 - ypos);
 		if (cameraAngle.y < -3.14f / 2.0f) {
 			cameraAngle.y = -3.14f / 2.0f;
-			std::cout << "here<\n";
+			//std::cout << "here<\n";
 		}
 		if (cameraAngle.y > 3.14f / 2.0f) {
 			cameraAngle.y = 3.14f / 2.0f;
-			std::cout << "here>\n";
+			//std::cout << "here>\n";
 		}
 		glfwSetInputMode(windowPointer, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 

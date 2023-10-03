@@ -97,6 +97,6 @@ glm::vec2 Collision_detection::getRotationAngles(glm::vec3 A, glm::vec3 B, glm::
     float xAngle = glm::orientedAngle(A, C_rotated, B);
 
 
-    std::cout << xAngle << " | " << yAngle << "\n";
+    //std::cout << xAngle << " | " << yAngle << "\n";
     return glm::vec2(xAngle, yAngle);
 }

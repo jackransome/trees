@@ -87,23 +87,13 @@ void Entity1::perLoop(){
 
 	// ------ rotating the forward vector
 
-	// Create a rotation matrix using the axis and the angle
+	// rotating forward with y rotation
 	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.y, right);
+	glm::vec3 yRotatedForward = glm::vec3(rotationMatrix * glm::vec4(forward, 1.0f));
 
-	// Multiply the vector by the rotation matrix
-	glm::vec4 rotatedVec4 = rotationMatrix * glm::vec4(forward, 1.0f);
-
-	// Convert the result back to a vec3 and return it
-	glm::vec3 result = glm::vec3(rotatedVec4);
-
-	// Create a rotation matrix using the axis and the angle
+	// rotating y rotated forward with x rotation
 	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.x, up);
-
-	// Multiply the vector by the rotation matrix
-	rotatedVec4 = rotationMatrix * glm::vec4(result, 1.0f);
-
-	// Convert the result back to a vec3 and return it
-	result = glm::vec3(rotatedVec4);
+	glm::vec3 xRotatedForward = glm::vec3(rotationMatrix * glm::vec4(yRotatedForward, 1.0f));
 
 	// ------ rotating the up vector
 
@@ -111,7 +101,7 @@ void Entity1::perLoop(){
 	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.y, right);
 
 	// Multiply the vector by the rotation matrix
-	rotatedVec4 = rotationMatrix * glm::vec4(newUp, 1.0f);
+	glm::vec3 rotatedVec4 = rotationMatrix * glm::vec4(newUp, 1.0f);
 
 	// Convert the result back to a vec3 and return it
 	newUp = glm::vec3(rotatedVec4);
@@ -127,15 +117,32 @@ void Entity1::perLoop(){
 
 	position = segment->convertPlaneToRealCoords(planePos) + up*height;
 	cameraFrom = position + up * 0.2f;
-	cameraTo = position + result;
+	cameraTo = position + up * 0.2f + xRotatedForward;
 	cameraUp = newUp;
+	if (!switched) {
+		globals::gfx.setCameraManually(cameraFrom, cameraTo, cameraUp);
+	}
+	else {
+		glm::vec3 difference = cameraFrom - oldCameraFrom;
+		//oldCameraFrom += difference*std::max(switchCounter*2, 1.0f);
+		//oldCameraTo += difference * std::max(switchCounter * 2, 1.0f);
+		globals::gfx.setCameraManually(cameraFrom*switchCounter + oldCameraFrom*(1.0f-switchCounter), cameraTo * switchCounter + oldCameraTo * (1.0f - switchCounter), cameraUp * switchCounter + oldCameraUp * (1.0f - switchCounter));
+		switchCounter += 0.04;
+		if (switchCounter >= 1) {
+			switched = false;
+			switchCounter = 0;
+		}
+	}
 	
-	globals::gfx.setCameraManually(cameraFrom, cameraTo, up);
 	//std::cout << globals::input.cameraAngle.x << " | " << globals::input.cameraAngle.y << "\n";
 	updateVkObjectState();
 }
 
 void Entity1::changeSegment(Csegment* _segment){
+	oldCameraFrom = cameraFrom;
+	oldCameraTo = cameraTo;
+	oldCameraUp = cameraUp;
+	switched = true;
 	segment = _segment;
 	segmentBounds = segment->getPlaneDims();
 	globals::input.cameraAngle = segment->getNewCameraAngle(cameraTo - cameraFrom, cameraUp, planePos.x);
