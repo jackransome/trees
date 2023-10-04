@@ -156,7 +156,6 @@ glm::vec3 Csegment::getNewCameraAngle(glm::vec3 direction, glm::vec3 up, float p
 				xAngle *= -1;
 			}
 			yAngle = -3.1514 / 2;
-			std::cout << "111\n";
 		}
 		else {
 			// if the direction faces up 
@@ -166,14 +165,9 @@ glm::vec3 Csegment::getNewCameraAngle(glm::vec3 direction, glm::vec3 up, float p
 				xAngle *= -1;
 			}
 			yAngle = 3.1514 / 2;
-			std::cout << "222\n";
 		}
 	}
 	else {
-		std::cout << "333\n";
-
-		std::cout << "THIS: " << glm::dot(up, normal) << "\n";
-		std::cout << "THIS1: " << Collision_detection::getAngle(direction, glm::vec3(0, 0, 0), up) << "\n";
 		// get direction projected onto the directionNormalized / cross plane
 		glm::vec3 proj = direction - Collision_detection::projectOnto(direction, normal);
 		// get angle between directionNormalized and the projection
@@ -194,11 +188,11 @@ glm::vec3 Csegment::getNewCameraAngle(glm::vec3 direction, glm::vec3 up, float p
 		if (dot(direction, normal) < 0) {
 			yAngle *= -1;
 		}
-		std::cout << "A (" << directionNormalized.x << "," << directionNormalized.y << "," << directionNormalized.z << ")\n";
-		std::cout << "B (" << normal.x << "," << normal.y << "," << normal.z << ")\n";
-		std::cout << "C (" << direction.x << "," << direction.y << "," << direction.z << ")\n";
-		std::cout << "D (" << up.x << "," << up.y << "," << up.z << ")\n";
-		std::cout << "E (" << proj.x << "," << proj.y << "," << proj.z << ")\n";
+		//std::cout << "A (" << directionNormalized.x << "," << directionNormalized.y << "," << directionNormalized.z << ")\n";
+		//std::cout << "B (" << normal.x << "," << normal.y << "," << normal.z << ")\n";
+		//std::cout << "C (" << direction.x << "," << direction.y << "," << direction.z << ")\n";
+		//std::cout << "D (" << up.x << "," << up.y << "," << up.z << ")\n";
+		//std::cout << "E (" << proj.x << "," << proj.y << "," << proj.z << ")\n";
 
 	}
 

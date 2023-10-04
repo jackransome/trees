@@ -101,7 +101,9 @@ void main() {
         objectColor = vec3(0.7 + thing, 0.7 + thing, 0.7 + thing); 
         specularStrength = 0.0;
     } else {
-        objectColor = vec3(0.38, 0.38, 0.38); 
+        float thing = cnoise(FragPos*1000)*0.025+cnoise(FragPos*30)*0.015+cnoise(FragPos*1700)*0.025;
+        objectColor = vec3(0.3 + thing, 0.3 + thing, 0.3 + thing); 
+        //objectColor = vec3(0.38, 0.38, 0.38); 
     }
 
 	// ambient
@@ -128,8 +130,8 @@ void main() {
     outColor = vec4(result, 1.0);
     float fogDist = 4;
     float distance = max(fogDist - distance(cameraPos, FragPos), 0)/fogDist;
-    
-    outColor = distance*outColor + (1-distance)*vec4(0.9,0.9,0.9,1);
+    vec4 fogColour = vec4(0.9,0.9,0.9,1);
+    outColor = distance*outColor + (1-distance)*fogColour;
     
 	//outColor = vec4(ambient + diffuse + specular, 1) * texture(texSampler, fragTexCoord);
 }

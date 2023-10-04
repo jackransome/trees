@@ -29,11 +29,6 @@ namespace globals
 		{
 			make_shared<Csegment>(glm::vec3(100, 100, 90), glm::vec3(100, 100, 100), 1)
 		};
-		glm::vec3 temp;
-		for (float i = 0; i < 1; i += 0.01) {
-			temp = (dynamic_cast<Csegment*>(polyhedrons.back().get()))->convertPlaneToNormal(i* (dynamic_cast<Csegment*>(polyhedrons.back().get()))->getPlaneDims().x);
-			std::cout << temp.x << " | " << temp.y << " | " << temp.z << " | \n";
-		}
 		World_generator();
 		polyhedrons.push_back(make_shared<Entity1>(dynamic_cast<Csegment*>(polyhedrons.back().get())));
 		

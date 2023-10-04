@@ -9,6 +9,8 @@
 #include "Csegment.h"
 #include "Entity1.h"
 #include "SoundPlayer.h"
+#include <cstdlib>  // For rand() and RAND_MAX
+
 
 using std::chrono::time_point_cast;
 using std::chrono::duration_cast;
@@ -34,10 +36,39 @@ int main()
 
 		SoundPlayer soundPlayer;
 		soundPlayer.setGlobalVolume(1);
-		soundPlayer.loadSound("Ambient1", "sounds/Ambient1_33.wav");
-		int music_id = soundPlayer.playSoundByName("Ambient1", 0.2);
+		soundPlayer.loadSound("distant_1", "sounds/distant_1.wav");
+		soundPlayer.loadSound("distant_2", "sounds/distant_2.wav");
+		soundPlayer.loadSound("distant_3", "sounds/distant_3.wav");
+		soundPlayer.loadSound("distant_4", "sounds/distant_4.wav");
+		soundPlayer.loadSound("Wind1", "sounds/Wind1.wav");
+		int music_id = soundPlayer.playSoundByName("Wind1", 0.3);
 		soundPlayer.loopSound(music_id);
+		int counter = 0;
+		int countermax = 10000;
+		int selector = rand() % 3;
 		while (!globals::gfx.shouldClose) {
+			counter++;
+			if (counter == countermax) {
+				counter = 0;
+				countermax = 10000 + rand() % 30000;
+				if (selector == 0) {
+					soundPlayer.playSoundByName("distant_1", 0.02);
+				}
+				else if (selector == 1) {
+					soundPlayer.playSoundByName("distant_2", 0.35);
+				} 
+				else if (selector == 2) {
+					soundPlayer.playSoundByName("distant_3", 0.35);
+				}
+				else {
+					soundPlayer.playSoundByName("distant_4", 0.3);
+				}
+				selector += rand() % 3 + 1;
+				if (selector > 3) {
+					selector -= 4;
+				}
+				
+			}
 			auto newTime = time_point_cast<us>(Time::now());
 			auto frameTime = duration_cast<us>(newTime - currentTime).count();
 			currentTime = newTime;
