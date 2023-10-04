@@ -12,8 +12,8 @@ World_generator::World_generator() {
     }
 
     points[0] = glm::vec3(0, 0, 0);
-    points[1] = glm::vec3(1, 5, 0);
-    points[2] = glm::vec3(0, -1, 5);
+    points[1] = glm::vec3(3, 0, 3);
+    points[2] = glm::vec3(-2, 0, 4);
 
     adjacencyMatrix[0][0] = 0;
     adjacencyMatrix[0][1] = 1;

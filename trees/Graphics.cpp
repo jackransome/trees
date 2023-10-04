@@ -1472,7 +1472,7 @@ void Graphics::createCommandBuffers() {
 		renderPassInfo.renderArea.extent = swapChainExtent;
 
 		std::array<VkClearValue, 2> clearValues = {};
-		clearValues[0].color = { 0.9f, 0.9f,0.9f, 1.0f };
+		clearValues[0].color = { 0.9f, 0.9f, 0.9f, 1.0f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
 		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
@@ -1555,7 +1555,7 @@ void Graphics::updateUniformBuffer(uint32_t currentImage) {
 
 	ubo.proj = glm::perspective(glm::radians(FOV), swapChainExtent.width / (float)swapChainExtent.height, 0.001f, 1000.0f);
 	ubo.proj[1][1] *= -1;
-	ubo.cameraPos = glm::vec3(5, 3, -5);// cameraPosition;
+	ubo.cameraPos = cameraFrom;// cameraPosition;
 	//static auto startTime = std::chrono::high_resolution_clock::now();
 
 	//auto currentTime = std::chrono::high_resolution_clock::now();
@@ -1864,7 +1864,7 @@ void Graphics::loadModel(const char* path, glm::vec4 colour, glm::vec3 scale)
 }
 void Graphics::loadModels()
 {
-	loadModel("models/cylinder_100.obj", glm::vec4(0.3, 0.8, 0.3, 1), glm::vec3(1, 1, 1));
+	loadModel("models/cylinder_100s.obj", glm::vec4(0.3, 0.3, 0.4, 1), glm::vec3(1, 1, 1));
 	loadModel("models/sphere_1.obj", glm::vec4(0.2, 0.4, 0.9, 1), glm::vec3(0.5));
 	loadModel("models/xyzOrigin.obj", glm::vec4(0.1, 0.9, 0.1, 1), glm::vec3(1));
 	loadModel("models/small_sphere.obj", glm::vec4(0.7, 0.9, 0.1, 1), glm::vec3(1));

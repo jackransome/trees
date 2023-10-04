@@ -8,6 +8,7 @@
 #include "Globals.h"
 #include "Csegment.h"
 #include "Entity1.h"
+#include "SoundPlayer.h"
 
 using std::chrono::time_point_cast;
 using std::chrono::duration_cast;
@@ -18,6 +19,7 @@ int main()
 {
 	using std::make_shared;
 	glm::vec3 camPos = glm::vec3(0, 0, 0);
+
 	try
 	{
 		typedef std::chrono::high_resolution_clock Time;
@@ -30,6 +32,11 @@ int main()
 
 		glm::vec3 cameraOffset{ 0, 2, 0 };
 
+		SoundPlayer soundPlayer;
+		soundPlayer.setGlobalVolume(1);
+		soundPlayer.loadSound("Ambient1", "sounds/Ambient1_33.wav");
+		int music_id = soundPlayer.playSoundByName("Ambient1", 0.2);
+		soundPlayer.loopSound(music_id);
 		while (!globals::gfx.shouldClose) {
 			auto newTime = time_point_cast<us>(Time::now());
 			auto frameTime = duration_cast<us>(newTime - currentTime).count();

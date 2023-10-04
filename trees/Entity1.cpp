@@ -58,10 +58,10 @@ void Entity1::perLoop(){
 		onGround = false;
 	}
 	if (planePos.y > segmentBounds.y) {
-		planePos.y = segmentBounds.y;
+		planePos.y = segmentBounds.y -0.001;
 	}
 	else if (planePos.y < 0) {
-		planePos.y = 0;
+		planePos.y = 0.001;
 	}
 	if (planePos.x > segmentBounds.x) {
 		planePos.x -= segmentBounds.x;

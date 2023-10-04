@@ -34,7 +34,7 @@ Csegment::Csegment(glm::vec3 _start, glm::vec3 _end, float _width) : Polyhedron(
 }
 
 void Csegment::perLoop() {
-	//rotation.x = 
+	//rotation.x += 0.5; 
 	//rotation.z += 1;// = glm::vec3(0, 0, 0);
 	//position = glm::vec3(0, 0, 0);
 	updateVkObjectState();
