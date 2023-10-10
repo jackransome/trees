@@ -100,3 +100,20 @@ glm::vec2 Collision_detection::getRotationAngles(glm::vec3 A, glm::vec3 B, glm::
     //std::cout << xAngle << " | " << yAngle << "\n";
     return glm::vec2(xAngle, yAngle);
 }
+
+bool Collision_detection::correctSpherePositionC(glm::vec3* dynamicPos, float rd, glm::vec3 staticPos, glm::vec3 staticPos2, float rs) {
+    // middle
+    glm::vec3 projection = 
+    if ()
+
+    // ends
+    return false;
+}
+
+bool Collision_detection::correctSpherePositionS(glm::vec3* dynamicPos, float rd, glm::vec3 staticPos, float rs) {
+    if (glm::distance(*dynamicPos, staticPos) < rd + rs) {
+        *dynamicPos = staticPos + glm::normalize(*dynamicPos - staticPos) * (rd + rs);
+        return true;
+    }
+    return false;
+}

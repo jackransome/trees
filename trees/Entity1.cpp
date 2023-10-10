@@ -130,8 +130,8 @@ void Entity1::perLoop(){
 	}
 
 	
-	cameraFrom = position + up * 0.2f;
-	cameraTo = position + up * 0.2f + forward;
+	cameraFrom = position;
+	cameraTo = position + forward;
 	globals::gfx.setCameraManually(cameraFrom, cameraTo, up);
 	/*if (!switched) {
 		globals::gfx.setCameraManually(cameraFrom, cameraTo, cameraUp);
