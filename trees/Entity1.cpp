@@ -54,81 +54,85 @@ void Entity1::perLoop(){
 
 	//camera
 
-	glm::vec3 forward = glm::vec3(0,0,1);// segment->getDirectionNormalized();
-	glm::vec3 up = glm::vec3(0, 1, 0);// segment->convertPlaneToNormal(planePos.x);
-	glm::vec3 right = glm::normalize(glm::cross(forward, up));
-	glm::vec3 cameraAngle = globals::input.cameraAngle;
-	glm::vec3 newUp = up;
+	// reset camera delta
 
-	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.x, up);
-	glm::vec3 newForward = glm::vec3(rotationMatrix * glm::vec4(forward, 1.0f));
-	glm::vec3 newRight = glm::vec3(rotationMatrix * glm::vec4(right, 1.0f));
+	cameraAngleDelta = glm::vec3(0, 0, 0);
+
+	// get camera angle delta from mouse input
+	cameraAngleDelta.y = cameraSensitivity * float(globals::input.windowHeight / 2 - globals::input.mouseYpos);
+	cameraAngleDelta.x = cameraSensitivity * float(globals::input.windowWidth / 2 - globals::input.mouseXpos);
+	/*if (globals::input.keys.keyCounts["leftAlt"] >= 1)
+	{
+		cameraAngleDelta.z = cameraSensitivity * float(globals::input.windowWidth / 2 - globals::input.mouseXpos);
+	}
+	else {
+		cameraAngleDelta.x = cameraSensitivity * float(globals::input.windowWidth / 2 - globals::input.mouseXpos);
+	}*/
+
+	if (globals::input.keys.keyCounts["q"] >= 1)
+	{
+		cameraAngleDelta.z -= 0.05;
+	}
+	if (globals::input.keys.keyCounts["e"] >= 1)
+	{
+		cameraAngleDelta.z += 0.05;
+	}
+
+	//first rotate the up vector by the camera delta z around the old forward
+
+	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngleDelta.z, forward);
+	up  = glm::vec3(rotationMatrix * glm::vec4(up, 1.0f));
+
+	//calculate new right axis
+	right = glm::normalize(glm::cross(forward, up));
+
+	//now rotate the forward vector by the y delta around the "right" axis
+	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngleDelta.y, right);
+	forward = glm::vec3(rotationMatrix * glm::vec4(forward, 1.0f));
+
+	//now rotate the forward vector by the x delta around the "up" axis
+	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngleDelta.x, up);
+	forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(forward, 1.0f)));
+	
+	//now rotate the up vector by the y delta around the "right" axis
+	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngleDelta.y, right);
+	up = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(up, 1.0f)));
+
 	//controls
 	speed = 0.01f;
-	if (globals::input.keys.keyCounts["leftAlt"] >= 1)
+	if (globals::input.keys.keyCounts["leftCtrl"] >= 1)
 	{
 		speed = 0.02f;
 	}
 	if (globals::input.keys.keyCounts["w"] >= 1)
 	{
-		position += speed * newForward;
+		position += speed * forward;
 	}
 	if (globals::input.keys.keyCounts["a"] >= 1)
 	{
-		position -= speed * newRight;
+		position -= speed * right;
 	}
 	if (globals::input.keys.keyCounts["s"] >= 1)
 	{
-		position -= speed * newForward;
+		position -= speed * forward;
 	}
 	if (globals::input.keys.keyCounts["d"] >= 1)
 	{
-		position += speed * newRight;
+		position += speed * right;
 	}
 	if (globals::input.keys.keyCounts["space"] >= 1)
 	{
-		position.y += speed;
+		position += speed * up;
 	}
 	if (globals::input.keys.keyCounts["leftShift"] >= 1)
 	{
-		position.y -= speed;
+		position -= speed * up;
 	}
 
-	// ------ rotating the forward vector
-
-	// rotating forward with y rotation
-	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.y, right);
-	glm::vec3 yRotatedForward = glm::vec3(rotationMatrix * glm::vec4(forward, 1.0f));
-
-	// rotating y rotated forward with x rotation
-	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.x, up);
-	glm::vec3 xRotatedForward = glm::vec3(rotationMatrix * glm::vec4(yRotatedForward, 1.0f));
-
-	// ------ rotating the up vector
-
-	// Create a rotation matrix using the axis and the angle
-	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.y, right);
-
-	// Multiply the vector by the rotation matrix
-	glm::vec3 rotatedVec4 = rotationMatrix * glm::vec4(newUp, 1.0f);
-
-	// Convert the result back to a vec3 and return it
-	newUp = glm::vec3(rotatedVec4);
-
-	// Create a rotation matrix using the axis and the angle
-	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngle.x, up);
-
-	// Multiply the vector by the rotation matrix
-	rotatedVec4 = rotationMatrix * glm::vec4(newUp, 1.0f);
-
-	// Convert the result back to a vec3 and return it
-	newUp = glm::vec3(rotatedVec4);
-
-	//position = segment->convertPlaneToRealCoords(planePos) + up*height;
+	
 	cameraFrom = position + up * 0.2f;
-	cameraTo = position + up * 0.2f + xRotatedForward;
-	cameraUp = newUp;
-	globals::gfx.setCameraManually(cameraFrom, cameraTo, cameraUp);
+	cameraTo = position + up * 0.2f + forward;
+	globals::gfx.setCameraManually(cameraFrom, cameraTo, up);
 	/*if (!switched) {
 		globals::gfx.setCameraManually(cameraFrom, cameraTo, cameraUp);
 	}

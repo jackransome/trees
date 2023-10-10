@@ -14,11 +14,11 @@ void Input::init(GLFWwindow* window)
 
 void Input::run() {
 	glfwPollEvents();
-	glfwGetCursorPos(windowPointer, &xpos, &ypos);
+	glfwGetCursorPos(windowPointer, &mouseXpos, &mouseYpos);
 	if (inFocus) {
 		glfwSetCursorPos(windowPointer, windowWidth / 2, windowHeight / 2);
-		cameraAngle.x += 0.003f * float(windowWidth / 2 - xpos);
-		cameraAngle.y += 0.003f * float(windowHeight / 2 - ypos);
+		cameraAngle.x += 0.003f * float(windowWidth / 2 - mouseXpos);
+		cameraAngle.y += 0.003f * float(windowHeight / 2 - mouseYpos);
 		if (cameraAngle.y < -3.14f / 2.0f) {
 			cameraAngle.y = -3.14f / 2.0f;
 			//std::cout << "here<\n";
@@ -36,7 +36,9 @@ void Input::run() {
 	}
 
 	glfwGetFramebufferSize(windowPointer, &windowWidth, &windowHeight);
-	mousePosInWindow = glm::vec2(2 * (xpos - windowWidth / 2), 2 * (ypos - windowHeight / 2));
+	mousePosInWindow = glm::vec2(2 * (mouseXpos - windowWidth / 2), 2 * (mouseYpos - windowHeight / 2));
+	//std::cout << "mousePos: " << mouseXpos << " , " << mouseYpos << "\n";
+	//std::cout << "mousePosInWindow: " << mousePosInWindow.x << " , " << mousePosInWindow.y << "\n";
 }
 
 void Input::clearInputString() {

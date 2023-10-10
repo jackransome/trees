@@ -108,7 +108,7 @@ public:
 	bool stringInputEnabled = true;
 	bool EXIT = false;
 	void run();
-	double xpos, ypos;
+	double mouseXpos, mouseYpos;
 	glm::vec3 cameraAngle = glm::vec3(0, 0, 0);
 	int windowWidth, windowHeight;
 	glm::vec2 mousePosInWindow;

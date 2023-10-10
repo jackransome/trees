@@ -147,13 +147,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.1.97.0\Include;$(SolutionDir)\Libraries\glfw-3.2.1.bin.WIN64\include;$(SolutionDir)\Libraries\glm;$(SolutionDir)\Libraries\stb_image;$(SolutionDir)\Libraries\tiny_obj_loader</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.1.97.0\Include;$(SolutionDir)\Libraries\glfw-3.2.1.bin.WIN64\include;$(SolutionDir)\Libraries\glm;$(SolutionDir)\Libraries\stb_image;$(SolutionDir)\Libraries\OpenAL\include;$(SolutionDir)\Libraries\libsndfile\include\;$(SolutionDir)\Libraries\tiny_obj_loader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Libraries\glfw-3.2.1.bin.WIN64\lib-vc2015;C:\VulkanSDK\1.1.97.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Libraries\glfw-3.2.1.bin.WIN64\lib-vc2015;C:\VulkanSDK\1.1.97.0\Lib;$(SolutionDir)\Libraries\libsndfile\lib;$(SolutionDir)\Libraries\OpenAL\libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;OpenAL32.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

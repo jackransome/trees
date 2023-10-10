@@ -104,11 +104,11 @@ int main()
 
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)
 				{
-					globals::gfx.setObjectsWireFrame(true);
+					//globals::gfx.setObjectsWireFrame(true);
 				}
 				else if (globals::input.keys.keyCounts["leftCtrl"] == 0)
 				{
-					globals::gfx.setObjectsWireFrame(false);
+					//globals::gfx.setObjectsWireFrame(false);
 				}
 
 				accumulator -= globals::dt;
