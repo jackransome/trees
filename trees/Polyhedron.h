@@ -16,13 +16,15 @@ public:
 	polyType type;
 	explicit Polyhedron(glm::vec3 position, glm::vec3 scale, glm::vec3 rotation);
 
+	glm::vec3* getPositionPointer();
+
 	virtual void perLoop() = 0;
 
 	std::string name = "unchanged_string";
-
+	void updateVkObjectState();
 protected:
 
 	int vkObjectIndex;
 
-	void updateVkObjectState();
+	
 };

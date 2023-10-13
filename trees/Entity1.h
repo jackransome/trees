@@ -9,6 +9,7 @@ public:
 	Csegment* getSegment();
 	void setHeight(float _height);
 	void setPlanePos(glm::vec2 _planePos);
+	glm::vec3 getOldPosition();
 private:
 	
 	glm::vec2 planePos;
@@ -35,6 +36,9 @@ private:
 	glm::vec3 forward = glm::vec3(0, 0, 1);
 	glm::vec3 right = glm::vec3(1, 0, 0);
 	glm::mat4 rotationMatrix;
+
+
+	glm::vec3 oldPosition;
 	float speed = 0.01f;
 	bool switched = false;
 	float switchCounter = 0;

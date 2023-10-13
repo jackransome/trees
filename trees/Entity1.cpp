@@ -10,47 +10,11 @@ Entity1::Entity1(Csegment* startingSegment) : Polyhedron(glm::vec3(0,0,0), glm::
 	planeDirection = glm::vec2(1, 0);
 	planeDirectionRight = glm::vec2(0, 1);
 	type = entity;
+	oldPosition = position;
 }
 
 void Entity1::perLoop(){
-	//planePos.y += 0.1;
-	//planePos.x += 0.1;
-
-
-	
-	//setting direction according to mouse
-	/*directionAngle = globals::input.cameraAngle.x + 3.14159265359 / 2;
-	planeDirection = glm::vec2(std::cos(directionAngle), std::sin(directionAngle));
-	planeDirectionRight = glm::vec2(std::cos(directionAngle + 3.14159265359 / 2), std::sin(directionAngle + 3.14159265359 / 2));
-
-	height += hVel;
-	hVel -= 0.0005;
-	if (height <= 0) {
-		height = 0;
-		onGround = true;
-	}
-	else {
-		onGround = false;
-	}
-	if (planePos.y > segmentBounds.y) {
-		planePos.y = segmentBounds.y -0.001;
-	}
-	else if (planePos.y < 0) {
-		planePos.y = 0.001;
-	}
-	if (planePos.x > segmentBounds.x) {
-		planePos.x -= segmentBounds.x;
-	}
-	else if (planePos.x < 0) {
-		planePos.x += segmentBounds.x;
-	}
-
-
-	rotation.x += 30;
-	rotation.y += 60;
-	rotation.z += 90;*/
-
-	
+	oldPosition = position;
 
 	//camera
 
@@ -80,10 +44,12 @@ void Entity1::perLoop(){
 
 	//first rotate the up vector by the camera delta z around the old forward
 
-	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngleDelta.z, forward);
-	up  = glm::vec3(rotationMatrix * glm::vec4(up, 1.0f));
-
 	//calculate new right axis
+
+
+	rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraAngleDelta.z, forward);
+	up = glm::vec3(rotationMatrix * glm::vec4(up, 1.0f));
+
 	right = glm::normalize(glm::cross(forward, up));
 
 	//now rotate the forward vector by the y delta around the "right" axis
@@ -174,6 +140,11 @@ void Entity1::setHeight(float _height){
 
 void Entity1::setPlanePos(glm::vec2 _planePos){
 	planePos = _planePos;
+}
+
+glm::vec3 Entity1::getOldPosition()
+{
+	return oldPosition;
 }
 
 glm::vec2 Entity1::correctPlanePos(glm::vec2 _planePos)

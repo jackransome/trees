@@ -6,6 +6,11 @@ Polyhedron::Polyhedron(glm::vec3 position, glm::vec3 scale, glm::vec3 rotation) 
 	vkObjectIndex = -1;
 }
 
+glm::vec3* Polyhedron::getPositionPointer()
+{
+	return &position;
+}
+
 
 void Polyhedron::updateVkObjectState()
 {
