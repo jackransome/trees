@@ -3,6 +3,7 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <iostream>
+#include "Globals.h"
 float Collision_detection::getDistanceFromSeg(glm::vec3 point, glm::vec3 start, glm::vec3 end, float diameter) {
     // Calculate the vector from the start to the end of the segment
     glm::vec3 segVector = end - start;
@@ -107,7 +108,7 @@ bool Collision_detection::correctSpherePositionC(glm::vec3 dynamicPosPrev, glm::
     if (shortestDistanceBetweenSegments(dynamicPosPrev, *dynamicPos, staticPos, staticPos2) > rd + rs) {
         return false;
     }
-
+    
     // checking to see if the sphere started in line with the main part of the segment
     
     //get length of cylinder
@@ -120,9 +121,10 @@ bool Collision_detection::correctSpherePositionC(glm::vec3 dynamicPosPrev, glm::
         //if not in corner seg, treat as plane
         if (glm::length((dynamicPosPrev - staticPos) - projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos))) < rs + rd) {
             //take away proj onto cyl line, add cyl line dir * rd
-            if (glm::length(projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos))) < rd) {
+            if (glm::length(projectOnto((*dynamicPos - staticPos), (staticPos2 - staticPos))) < rd) {
                 //*dynamicPos += projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos));
-                *dynamicPos -= glm::normalize(staticPos2 - staticPos) * (rd - glm::length(projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos))));
+                *dynamicPos -= glm::normalize(staticPos2 - staticPos) * (rd - glm::length(projectOnto((*dynamicPos - staticPos), (staticPos2 - staticPos))));
+                return true;
             }
 
         }
@@ -130,12 +132,16 @@ bool Collision_detection::correctSpherePositionC(glm::vec3 dynamicPosPrev, glm::
             std::cout << "yep 1\n";
         }
     } else if (glm::length(projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos)) > cylinderLength) {
+
         //if not in corner seg, treat as plane
         if (glm::length((dynamicPosPrev - staticPos) - projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos))) < rs + rd) {
-            if (glm::length(projectOnto((dynamicPosPrev - staticPos2), (staticPos - staticPos2))) < rd) {
+            if (glm::length(projectOnto((*dynamicPos - staticPos2), (staticPos - staticPos2))) < rd) {
                 
                 //*dynamicPos += projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos));
-                *dynamicPos -= glm::normalize(staticPos - staticPos2) * (rd - glm::length(projectOnto((dynamicPosPrev - staticPos2), (staticPos - staticPos2))));
+                //glm::vec3 temp = glm::normalize(staticPos - staticPos2) * (rd - glm::length(projectOnto((dynamicPosPrev - staticPos2), (staticPos - staticPos2))));
+                *dynamicPos -= glm::normalize(staticPos - staticPos2) * (0.001f+rd - glm::length(projectOnto((*dynamicPos - staticPos2), (staticPos - staticPos2))));
+                
+                return true;
             }
         }
         else {

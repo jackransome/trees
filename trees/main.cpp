@@ -78,10 +78,15 @@ int main()
 
 			while (accumulator >= globals::dt)
 			{
-				
+				if (globals::input.keys.keyCounts["z"] > 0) {
+					std::cout << "do_stuff\n";
+					std::cout << "pos: " << globals::polyhedrons[4]->position.x << " , " << globals::polyhedrons[4]->position.y << " , " << globals::polyhedrons[4]->position.z << "\n";
+				}
+				//std::cout << "frame\n";
 				globals::gfx.setCameraAngle(globals::input.cameraAngle);
 				globals::input.run();
-				bool switched = false;
+				//bool switched = false;
+
 				for (int i = 0; i < globals::polyhedrons.size(); i++) {
 					globals::polyhedrons[i]->perLoop();
 				}
@@ -91,8 +96,15 @@ int main()
 						if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == c_seg) {
 							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
 							Csegment* cseg = dynamic_cast<Csegment*>(globals::polyhedrons[j].get());
-							Collision_detection::correctSpherePositionC(ent->getOldPosition(), ent->getPositionPointer(), 0.05, cseg->getStart(), cseg->getEnd(), cseg->getDiameter() / 2);
-							ent->updateVkObjectState();
+							if (globals::input.keys.keyCounts["z"] > 0) {
+								std::cout << "check for collision\n";
+								std::cout << "pos: " << globals::polyhedrons[4]->position.x << " , " << globals::polyhedrons[4]->position.y << " , " << globals::polyhedrons[4]->position.z << "\n";
+							}
+							if (Collision_detection::correctSpherePositionC(ent->getOldPosition(), ent->getPositionPointer(), 0.05, cseg->getStart(), cseg->getEnd(), cseg->getDiameter() / 2)) {
+								ent->updateVkObjectState();
+								ent->updateCamera();
+							}
+							
 							/*							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
 														Csegment* cseg = dynamic_cast<Csegment*>(globals::polyhedrons[j].get());
 														Csegment* currcseg = ent->getSegment();
@@ -120,7 +132,11 @@ int main()
 
 				accumulator -= globals::dt;
 			}
-
+			if (globals::input.keys.keyCounts["z"] > 0) {
+				std::cout << "gfx draw\n";
+				std::cout << "pos: " << globals::polyhedrons[4]->position.x << " , " << globals::polyhedrons[4]->position.y << " , " << globals::polyhedrons[4]->position.z << "\n";
+			}
+			
 			globals::gfx.run();
 		}
 	}

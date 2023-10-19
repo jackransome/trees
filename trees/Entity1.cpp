@@ -72,6 +72,8 @@ void Entity1::perLoop(){
 	}
 	if (globals::input.keys.keyCounts["w"] >= 1)
 	{
+		std::cout << "1\n\n\n[[[]]]\n\n";
+		std::cout << "pos: " << globals::polyhedrons[4]->position.x << " , " << globals::polyhedrons[4]->position.y << " , " << globals::polyhedrons[4]->position.z << "\n";
 		position += speed * forward;
 	}
 	if (globals::input.keys.keyCounts["a"] >= 1)
@@ -145,6 +147,17 @@ void Entity1::setPlanePos(glm::vec2 _planePos){
 glm::vec3 Entity1::getOldPosition()
 {
 	return oldPosition;
+}
+
+void Entity1::updateCamera()
+{
+	cameraFrom = position;
+	cameraTo = position + forward;
+	globals::gfx.setCameraManually(cameraFrom, cameraTo, up);
+	if (globals::input.keys.keyCounts["z"] > 0) {
+		std::cout << "update camera\n";
+	}
+	
 }
 
 glm::vec2 Entity1::correctPlanePos(glm::vec2 _planePos)

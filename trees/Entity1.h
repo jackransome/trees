@@ -10,6 +10,7 @@ public:
 	void setHeight(float _height);
 	void setPlanePos(glm::vec2 _planePos);
 	glm::vec3 getOldPosition();
+	void updateCamera();
 private:
 	
 	glm::vec2 planePos;
