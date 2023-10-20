@@ -1892,11 +1892,6 @@ glm::vec3 Graphics::getProperCameraVelocity(glm::vec3 cameraVel) {
 	//if (!freeLook) {
 	cameraVel.x *= -1;
 	return cameraVel * cameraVelocity;
-	//}
-	//glm::vec3 forward = glm::vec3(sin(cameraAngle.x), 0, cos(cameraAngle.x));
-	//glm::vec3 vel = cameraVel.x * right * cameraVelocity + glm::vec3(0, cameraVel.y * cameraVelocity, 0) + cameraVel.z * forward * cameraVelocity;
-	//vel.y = cameraVel.y * cameraVelocity;
-	//return vel;
 }
 
 void Graphics::setCameraAngle(glm::vec3 _cameraAngle) {

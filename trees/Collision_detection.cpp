@@ -4,7 +4,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <iostream>
 #include "Globals.h"
-float Collision_detection::getDistanceFromSeg(glm::vec3 point, glm::vec3 start, glm::vec3 end, float diameter) {
+float Collision_detection::getDistanceFromSeg(const glm::vec3& point, const glm::vec3& start, const glm::vec3& end, const float& diameter) {
     // Calculate the vector from the start to the end of the segment
     glm::vec3 segVector = end - start;
 
@@ -60,12 +60,14 @@ float Collision_detection::getAngle(glm::vec3 A, glm::vec3 B, glm::vec3 C) {
     return std::acos(cosine_angle);
 }
 
-glm::vec2 Collision_detection::getRotationAngles(glm::vec3 A, glm::vec3 B, glm::vec3 C){
+glm::vec2 Collision_detection::getRotationAngles(const glm::vec3& A, const glm::vec3& B, const glm::vec3& C){
     // Normalize the input vectors
-    A = glm::normalize(A);
+    /*A = glm::normalize(A);
     B = glm::normalize(B);
-    C = glm::normalize(C);
+    C = glm::normalize(C);*/
+    std::cout << "removed normalization so this function may not work correctly\n";
    /* std::cout << "angles: -----\n";
+
     std::cout << "A: (" << A.x << " , " << A.y << " , " << A.z << ")\n";
     std::cout << "B: (" << B.x << " , " << B.y << " , " << B.z << ")\n";
     std::cout << "C: (" << C.x << " , " << C.y << " , " << C.z << ")\n";*/
@@ -102,7 +104,7 @@ glm::vec2 Collision_detection::getRotationAngles(glm::vec3 A, glm::vec3 B, glm::
     return glm::vec2(xAngle, yAngle);
 }
 
-bool Collision_detection::correctSpherePositionC(glm::vec3 dynamicPosPrev, glm::vec3* dynamicPos, float rd, glm::vec3 staticPos, glm::vec3 staticPos2, float rs) {
+bool Collision_detection::correctSpherePositionC(const glm::vec3& dynamicPosPrev, glm::vec3* dynamicPos, const float& rd, const glm::vec3& staticPos, const glm::vec3& staticPos2, const float& rs) {
 
     // early exit if no collision at any point
     if (shortestDistanceBetweenSegments(dynamicPosPrev, *dynamicPos, staticPos, staticPos2) > rd + rs) {
@@ -122,14 +124,15 @@ bool Collision_detection::correctSpherePositionC(glm::vec3 dynamicPosPrev, glm::
         if (glm::length((dynamicPosPrev - staticPos) - projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos))) < rs + rd) {
             //take away proj onto cyl line, add cyl line dir * rd
             if (glm::length(projectOnto((*dynamicPos - staticPos), (staticPos2 - staticPos))) < rd) {
-                //*dynamicPos += projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos));
+                
                 *dynamicPos -= glm::normalize(staticPos2 - staticPos) * (rd - glm::length(projectOnto((*dynamicPos - staticPos), (staticPos2 - staticPos))));
+                
                 return true;
             }
 
         }
         else {
-            std::cout << "yep 1\n";
+            std::cout << "COLLISION EDGE CASE 1\n";
         }
     } else if (glm::length(projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos)) > cylinderLength + rd) {
 
@@ -137,15 +140,13 @@ bool Collision_detection::correctSpherePositionC(glm::vec3 dynamicPosPrev, glm::
         if (glm::length((dynamicPosPrev - staticPos) - projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos))) < rs + rd) {
             if (glm::length(projectOnto((*dynamicPos - staticPos2), (staticPos - staticPos2))) < rd) {
                 
-                //*dynamicPos += projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos));
-                //glm::vec3 temp = glm::normalize(staticPos - staticPos2) * (rd - glm::length(projectOnto((dynamicPosPrev - staticPos2), (staticPos - staticPos2))));
                 *dynamicPos -= glm::normalize(staticPos - staticPos2) * (0.001f+rd - glm::length(projectOnto((*dynamicPos - staticPos2), (staticPos - staticPos2))));
                 
                 return true;
             }
         }
         else {
-            std::cout << "yep 2\n";
+            std::cout << "COLLISION EDGE CASE 2\n";
         }
     }
     else {
@@ -172,22 +173,10 @@ bool Collision_detection::correctSpherePositionC(glm::vec3 dynamicPosPrev, glm::
 
     }
 
-
-    //project sphere pos onto cylinder line
-    //glm::vec3 projection = projectOnto()
-
-    // treat as circle circle
-
-    //for cases where the center of the static circle are between the current and previous dynamic pos; just move the current pos back to in line with the static one and then do circle correction there
-    // (just use correctSpherePositions????)
-    
-
-    // ends
-
     return false;
 }
 
-bool Collision_detection::correctSpherePositionS(glm::vec3 dynamicPosPrev, glm::vec3* dynamicPos, float rd, glm::vec3 staticPos, float rs) {
+bool Collision_detection::correctSpherePositionS(const glm::vec3& dynamicPosPrev, glm::vec3* dynamicPos, const float& rd, const glm::vec3& staticPos, const float& rs) {
     if (glm::distance(*dynamicPos, staticPos) < rd + rs) {
         *dynamicPos = staticPos + glm::normalize(*dynamicPos - staticPos) * (rd + rs);
         return true;
@@ -206,6 +195,18 @@ float Collision_detection::pointToSegmentDistance(const glm::vec3& point, const 
     const float t = std::max(0.0f, std::min(1.0f, glm::dot(point - segStart, segDir) / segLengthSquared));
     const glm::vec3 projection = segStart + t * segDir;
     return glm::length(point - projection);
+}
+
+glm::vec3 Collision_detection::pointToSegmentVector(const glm::vec3& point, const glm::vec3& segStart, const glm::vec3& segEnd) {
+    const glm::vec3 segDir = segEnd - segStart;
+    const float segLengthSquared = glm::dot(segDir, segDir);
+    if (segLengthSquared == 0.0f) {
+        // Segment is a point
+        return segStart - point;
+    }
+    const float t = std::max(0.0f, std::min(1.0f, glm::dot(point - segStart, segDir) / segLengthSquared));
+    const glm::vec3 projection = segStart + t * segDir;
+    return projection - point;
 }
 
 float Collision_detection::shortestDistanceBetweenSegments(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& q1, const glm::vec3& q2) {
