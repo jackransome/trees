@@ -72,8 +72,6 @@ void Entity1::perLoop(){
 	}
 	if (globals::input.keys.keyCounts["w"] >= 1)
 	{
-		std::cout << "1\n\n\n[[[]]]\n\n";
-		std::cout << "pos: " << globals::polyhedrons[4]->position.x << " , " << globals::polyhedrons[4]->position.y << " , " << globals::polyhedrons[4]->position.z << "\n";
 		position += speed * forward;
 	}
 	if (globals::input.keys.keyCounts["a"] >= 1)

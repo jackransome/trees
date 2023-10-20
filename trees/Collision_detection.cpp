@@ -117,7 +117,7 @@ bool Collision_detection::correctSpherePositionC(glm::vec3 dynamicPosPrev, glm::
     //get sphere pos projected onto cylinder
     glm::vec3 proj = staticPos + projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos);
     // if neg or further along than cyl length, was not in line
-    if (dot(projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos), staticPos2 - staticPos) < 0) {
+    if (dot(projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos), staticPos2 - staticPos) < -rd) {
         //if not in corner seg, treat as plane
         if (glm::length((dynamicPosPrev - staticPos) - projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos))) < rs + rd) {
             //take away proj onto cyl line, add cyl line dir * rd
@@ -131,7 +131,7 @@ bool Collision_detection::correctSpherePositionC(glm::vec3 dynamicPosPrev, glm::
         else {
             std::cout << "yep 1\n";
         }
-    } else if (glm::length(projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos)) > cylinderLength) {
+    } else if (glm::length(projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos)) > cylinderLength + rd) {
 
         //if not in corner seg, treat as plane
         if (glm::length((dynamicPosPrev - staticPos) - projectOnto((dynamicPosPrev - staticPos), (staticPos2 - staticPos))) < rs + rd) {
