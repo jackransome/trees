@@ -1864,8 +1864,8 @@ void Graphics::loadModel(const char* path, glm::vec4 colour, glm::vec3 scale)
 }
 void Graphics::loadModels()
 {
-	loadModel("models/cylinder_100s.obj", glm::vec4(0.3, 0.3, 0.4, 1), glm::vec3(1, 1, 1));
-	loadModel("models/sphere_1.obj", glm::vec4(0.2, 0.4, 0.9, 1), glm::vec3(0.5));
+	loadModel("models/cylinder_100s.obj", glm::vec4(0.3, 0.3, 0.4, 1), glm::vec3(1));
+	loadModel("models/sphere_60_s.obj", glm::vec4(0.2, 0.4, 0.9, 1), glm::vec3(1));
 	loadModel("models/xyzOrigin.obj", glm::vec4(0.1, 0.9, 0.1, 1), glm::vec3(1));
 	loadModel("models/small_sphere.obj", glm::vec4(0.7, 0.9, 0.1, 1), glm::vec3(1));
 	loadModel("models/testUV.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1));

@@ -128,7 +128,7 @@ void main() {
 
 	vec3 result = (ambient + diffuse + specular) * objectColor;
     outColor = vec4(result, 1.0);
-    float fogDist = 4;
+    float fogDist = 8;
     float distance = max(fogDist - distance(cameraPos, FragPos), 0)/fogDist;
     vec4 fogColour = vec4(0.9,0.9,0.9,1);
     outColor = distance*outColor + (1-distance)*fogColour;

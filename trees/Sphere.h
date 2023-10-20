@@ -5,7 +5,7 @@ class Sphere :
 	public Polyhedron
 {
 public:
-	explicit Sphere(glm::vec3 position, float radius);
+	explicit Sphere(glm::vec3 _position, float _radius);
 
 	void perLoop() override;
 	float getRadius();

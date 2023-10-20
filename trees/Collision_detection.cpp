@@ -177,6 +177,21 @@ bool Collision_detection::correctSpherePositionC(const glm::vec3& dynamicPosPrev
 }
 
 bool Collision_detection::correctSpherePositionS(const glm::vec3& dynamicPosPrev, glm::vec3* dynamicPos, const float& rd, const glm::vec3& staticPos, const float& rs) {
+
+    // early exit if no collision at any point
+    if (pointToSegmentDistance(staticPos, dynamicPosPrev, *dynamicPos) > rs + rd) {
+        return false;
+    }
+
+    //if on the other side of the sphere, move so it's just not (slightly more on the starting side)
+    glm::vec3 staticToStart = dynamicPosPrev - staticPos;
+    glm::vec3 staticToEnd = *dynamicPos - staticPos;
+    if (glm::dot(staticToStart, staticToStart) < 0) {
+        //find the position between start and end that means static pos isn't between them
+        glm::vec3 projection = projectOnto(staticPos - dynamicPosPrev, *dynamicPos - dynamicPosPrev);
+        *dynamicPos = dynamicPosPrev + projection + glm::normalize(projection)*0.001f;
+    }
+
     if (glm::distance(*dynamicPos, staticPos) < rd + rs) {
         *dynamicPos = staticPos + glm::normalize(*dynamicPos - staticPos) * (rd + rs);
         return true;

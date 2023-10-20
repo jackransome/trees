@@ -3,26 +3,14 @@
 #include "Csegment.h"
 class Entity1 : public Polyhedron {
 public:
-	explicit Entity1(Csegment* startingSegment);
+	explicit Entity1(glm::vec3 _position);
 	void perLoop() override;
-	void changeSegment(Csegment* _segment);
-	Csegment* getSegment();
-	void setHeight(float _height);
-	void setPlanePos(glm::vec2 _planePos);
 	glm::vec3 getOldPosition();
 	void updateCamera();
 private:
-	
-	glm::vec2 planePos;
-	glm::vec2 segmentBounds;
-	Csegment* segment;
-	float directionAngle = 0;
-	glm::vec2 planeDirection;
-	glm::vec2 planeDirectionRight;
 	float hVel = 0;
 	float height;
 	bool onGround = true;
-	glm::vec2 correctPlanePos(glm::vec2 _planePos);
 	//camera manual values:
 	glm::vec3 cameraFrom;
 	glm::vec3 cameraTo;

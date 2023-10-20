@@ -2,6 +2,7 @@
 #include "Cylinder.h"
 #include "Csegment.h"
 #include "Entity1.h"
+#include "Sphere.h"
 #include "World_generator.h"
 namespace globals
 {
@@ -30,9 +31,7 @@ namespace globals
 			make_shared<Csegment>(glm::vec3(100, 100, 90), glm::vec3(100, 100, 100), 1)
 		};
 		World_generator();
-		polyhedrons.push_back(make_shared<Entity1>(dynamic_cast<Csegment*>(polyhedrons.back().get())));
-		
-
+		polyhedrons.push_back(make_shared<Entity1>(glm::vec3(-1,-1,-1)));
 
 	}
 }

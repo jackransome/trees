@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-enum polyType {entity, c_seg};
+enum polyType {entity, c_seg, polyType_sphere};
 
 class Polyhedron
 {

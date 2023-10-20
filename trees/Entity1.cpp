@@ -1,14 +1,9 @@
 #include "Entity1.h"
 #include <glm/gtx/quaternion.hpp>
 
-Entity1::Entity1(Csegment* startingSegment) : Polyhedron(glm::vec3(0,0,0), glm::vec3(0.04, 0.04, 0.04), glm::vec3(0, 0, 0)) {
+Entity1::Entity1(glm::vec3 _position) : Polyhedron(position, glm::vec3(0.04, 0.04, 0.04), glm::vec3(0, 0, 0)) {
 	vkObjectIndex = globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 1);
-	planePos = glm::vec2(0, 0);
-	segmentBounds = startingSegment->getPlaneDims();
-	position = startingSegment->convertPlaneToRealCoords(planePos);
-	segment = startingSegment;
-	planeDirection = glm::vec2(1, 0);
-	planeDirectionRight = glm::vec2(0, 1);
+	position = _position;
 	type = entity;
 	oldPosition = position;
 }
@@ -68,7 +63,7 @@ void Entity1::perLoop(){
 	speed = 0.01f;
 	if (globals::input.keys.keyCounts["leftCtrl"] >= 1)
 	{
-		speed = 0.02f;
+		speed = 0.05f;
 	}
 	if (globals::input.keys.keyCounts["w"] >= 1)
 	{
@@ -118,30 +113,6 @@ void Entity1::perLoop(){
 	updateVkObjectState();
 }
 
-void Entity1::changeSegment(Csegment* _segment){
-	oldCameraFrom = cameraFrom;
-	oldCameraTo = cameraTo;
-	oldCameraUp = cameraUp;
-	switched = true;
-	segment = _segment;
-	segmentBounds = segment->getPlaneDims();
-	//globals::input.cameraAngle = segment->getNewCameraAngle(cameraTo - cameraFrom, cameraUp, planePos.x);
-}
-
-Csegment* Entity1::getSegment()
-{
-	return segment;
-}
-
-void Entity1::setHeight(float _height){
-	height = _height;
-	hVel = 0;
-}
-
-void Entity1::setPlanePos(glm::vec2 _planePos){
-	planePos = _planePos;
-}
-
 glm::vec3 Entity1::getOldPosition()
 {
 	return oldPosition;
@@ -156,18 +127,4 @@ void Entity1::updateCamera()
 		std::cout << "update camera\n";
 	}
 	
-}
-
-glm::vec2 Entity1::correctPlanePos(glm::vec2 _planePos)
-{
-	if (_planePos.y > segmentBounds.y) {
-		_planePos.y = segmentBounds.y;
-	}
-	else if (_planePos.y < 0) {
-		_planePos.y = 0;
-	}
-	if (_planePos.x > segmentBounds.x) {
-		_planePos.x -= segmentBounds.x;
-	}
-	return _planePos;
 }
