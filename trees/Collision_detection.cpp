@@ -176,6 +176,54 @@ bool Collision_detection::correctSpherePositionC(const glm::vec3& dynamicPosPrev
     return false;
 }
 
+bool Collision_detection::correctSpherePositionCNoEnds(const glm::vec3& dynamicPosPrev, glm::vec3* dynamicPos, const float& rd, const glm::vec3& staticPos, const glm::vec3& staticPos2, const float& rs)
+{
+    // early exit if no collision at any point
+    if (shortestDistanceBetweenSegments(dynamicPosPrev, *dynamicPos, staticPos, staticPos2) > rd + rs) {
+        return false;
+    }
+
+    // checking to see if the sphere started in line with the main part of the segment
+
+    //get length of cylinder
+    float cylinderLength = glm::length(staticPos2 - staticPos);
+
+    //get sphere pos projected onto cylinder
+    glm::vec3 proj = staticPos + projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos);
+    // if neg or further along than cyl length, was not in line
+    if (dot(projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos), staticPos2 - staticPos) < -rd) {
+
+    }
+    else if (glm::length(projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos)) > cylinderLength + rd) {
+
+    }
+    else {
+        // get direction from prev pos projection onto cylinder, to prev pos
+
+        glm::vec3 startDirNorm = glm::normalize(dynamicPosPrev - staticPos - projectOnto(dynamicPosPrev - staticPos, staticPos2 - staticPos));
+
+        // get direction from next pos projection onto cylinder, to next pos
+
+        glm::vec3 endDir = *dynamicPos - staticPos - projectOnto(*dynamicPos - staticPos, staticPos2 - staticPos);
+
+        //correct pos onto the right side if it passed to the other side of the centreline of the cylinder
+        if (glm::dot(startDirNorm, endDir) < 0) {
+            *dynamicPos -= endDir + 0.01f * startDirNorm;
+        }
+
+        //recalc vector to current vector from cylinder centerline to new sphere pos
+        endDir = *dynamicPos - staticPos - projectOnto(*dynamicPos - staticPos, staticPos2 - staticPos);
+
+        //correct position
+        float currentDist = glm::length(endDir);
+        *dynamicPos += startDirNorm * (rd + rs - currentDist);
+        return true;
+
+    }
+
+    return false;
+}
+
 bool Collision_detection::correctSpherePositionS(const glm::vec3& dynamicPosPrev, glm::vec3* dynamicPos, const float& rd, const glm::vec3& staticPos, const float& rs) {
 
     // early exit if no collision at any point
@@ -210,6 +258,26 @@ float Collision_detection::pointToSegmentDistance(const glm::vec3& point, const 
     const float t = std::max(0.0f, std::min(1.0f, glm::dot(point - segStart, segDir) / segLengthSquared));
     const glm::vec3 projection = segStart + t * segDir;
     return glm::length(point - projection);
+}
+
+bool Collision_detection::pointToLineDistance(const glm::vec3& point, const glm::vec3& segStart, const glm::vec3& segEnd, float& distance){
+    const glm::vec3 segDir = segEnd - segStart;
+    const float segLengthSquared = glm::dot(segDir, segDir);
+    if (segLengthSquared == 0.0f) {
+        // Segment is a point
+        distance = glm::length(point - segStart);
+        std::cout << "<ERROR> : segment is a point\n";
+        return false;
+    }
+    float t = glm::dot(point - segStart, segDir) / segLengthSquared;
+    if (t < 0.0f || t > 1.0f) {
+        // Projection falls outside the segment
+        return false;
+    }
+    t = std::max(0.0f, std::min(1.0f, t));  // This line is now technically redundant, but kept for clarity
+    const glm::vec3 projection = segStart + t * segDir;
+    distance = glm::length(point - projection);
+    return true;
 }
 
 glm::vec3 Collision_detection::pointToSegmentVector(const glm::vec3& point, const glm::vec3& segStart, const glm::vec3& segEnd) {

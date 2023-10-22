@@ -11,6 +11,11 @@ glm::vec3* Polyhedron::getPositionPointer()
 	return &position;
 }
 
+glm::vec3 Polyhedron::getPosition()
+{
+	return position;
+}
+
 
 void Polyhedron::updateVkObjectState()
 {

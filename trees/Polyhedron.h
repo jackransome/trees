@@ -17,6 +17,7 @@ public:
 	explicit Polyhedron(glm::vec3 position, glm::vec3 scale, glm::vec3 rotation);
 
 	glm::vec3* getPositionPointer();
+	glm::vec3 getPosition();
 
 	virtual void perLoop() = 0;
 

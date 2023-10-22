@@ -92,16 +92,29 @@ int main()
 					globals::polyhedrons[i]->perLoop();
 				}
 				// Collision detection
+				float minDistance = 100000;
+				glm::vec3 closestNormal = glm::vec3(0, 0, 0);
 				for (int i = 0; i < globals::polyhedrons.size(); i++) {
 					for (int j = 0; j < globals::polyhedrons.size(); j++) {
+						//cylinder collision
 						if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == c_seg) {
 							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
 							Csegment* cseg = dynamic_cast<Csegment*>(globals::polyhedrons[j].get());
-							if (Collision_detection::correctSpherePositionC(ent->getOldPosition(), ent->getPositionPointer(), 0.05, cseg->getStart(), cseg->getEnd(), cseg->getDiameter() / 2)) {
+							if (Collision_detection::correctSpherePositionCNoEnds(ent->getOldPosition(), ent->getPositionPointer(), 0.05, cseg->getStart(), cseg->getEnd(), cseg->getDiameter() / 2)) {
 								ent->updateVkObjectState();
 								ent->updateCamera();
 							}
+							//getting closest object
+							float dist = 0;
+							if (Collision_detection::pointToLineDistance(ent->getPosition(), cseg->getStart(), cseg->getEnd(), dist)) {
+								dist -= 0.05 + cseg->getDiameter() / 2;
+								if (dist < minDistance) {
+									minDistance = dist;
+									closestNormal = glm::normalize(Collision_detection::pointToSegmentVector(ent->getPosition(), cseg->getStart(), cseg->getEnd()));
+								}
+							}
 						}
+						//sphere collision
 						else if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == polyType_sphere) {
 							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
 							Sphere* sphere = dynamic_cast<Sphere*>(globals::polyhedrons[j].get());
@@ -109,9 +122,23 @@ int main()
 								ent->updateVkObjectState();
 								ent->updateCamera();
 							}
+							float dist = glm::length(ent->getPosition() - sphere->getPosition()) - 0.05 - sphere->getRadius();
+							if (dist < minDistance) {
+								minDistance = dist;
+								closestNormal = glm::normalize(sphere->getPosition() - ent->getPosition());
+							}
 						}
 					}
 				}
+				for (int i = 0; i < globals::polyhedrons.size(); i++) {
+					if (globals::polyhedrons[i]->type == entity && minDistance < 10) {
+						if (globals::input.keys.keyCounts["h"] > 0)
+						{
+							*globals::polyhedrons[i]->getPositionPointer() += closestNormal * 0.01f;
+						}
+					}
+				}
+
 
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)
 				{
