@@ -91,19 +91,16 @@ int main()
 				for (int i = 0; i < globals::polyhedrons.size(); i++) {
 					globals::polyhedrons[i]->perLoop();
 				}
-				// Collision detection
+
+				//getting closest object
 				float minDistance = 100000;
 				glm::vec3 closestNormal = glm::vec3(0, 0, 0);
 				for (int i = 0; i < globals::polyhedrons.size(); i++) {
 					for (int j = 0; j < globals::polyhedrons.size(); j++) {
-						//cylinder collision
+						//cylinder
 						if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == c_seg) {
 							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
 							Csegment* cseg = dynamic_cast<Csegment*>(globals::polyhedrons[j].get());
-							if (Collision_detection::correctSpherePositionCNoEnds(ent->getOldPosition(), ent->getPositionPointer(), 0.05, cseg->getStart(), cseg->getEnd(), cseg->getDiameter() / 2)) {
-								ent->updateVkObjectState();
-								ent->updateCamera();
-							}
 							//getting closest object
 							float dist = 0;
 							if (Collision_detection::pointToLineDistance(ent->getPosition(), cseg->getStart(), cseg->getEnd(), dist)) {
@@ -114,14 +111,11 @@ int main()
 								}
 							}
 						}
-						//sphere collision
+						//sphere
 						else if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == polyType_sphere) {
 							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
 							Sphere* sphere = dynamic_cast<Sphere*>(globals::polyhedrons[j].get());
-							if (Collision_detection::correctSpherePositionS(ent->getOldPosition(), ent->getPositionPointer(), 0.05, *sphere->getPositionPointer(), sphere->getRadius())) {
-								ent->updateVkObjectState();
-								ent->updateCamera();
-							}
+
 							float dist = glm::length(ent->getPosition() - sphere->getPosition()) - 0.05 - sphere->getRadius();
 							if (dist < minDistance) {
 								minDistance = dist;
@@ -138,6 +132,36 @@ int main()
 						}
 					}
 				}
+
+				// Collision detection
+
+				for (int i = 0; i < globals::polyhedrons.size(); i++) {
+					for (int j = 0; j < globals::polyhedrons.size(); j++) {
+						//cylinder collision
+						if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == c_seg) {
+							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
+							Csegment* cseg = dynamic_cast<Csegment*>(globals::polyhedrons[j].get());
+							if (Collision_detection::correctSpherePositionCNoEnds(ent->getOldPosition(), ent->getPositionPointer(), 0.05, cseg->getStart(), cseg->getEnd(), cseg->getDiameter() / 2)) {
+								ent->updateVkObjectState();
+								ent->updateCamera();
+							}
+
+						}
+						//sphere collision
+						else if (globals::polyhedrons[i]->type == entity && globals::polyhedrons[j]->type == polyType_sphere) {
+							Entity1* ent = dynamic_cast<Entity1*>(globals::polyhedrons[i].get());
+							Sphere* sphere = dynamic_cast<Sphere*>(globals::polyhedrons[j].get());
+							if (Collision_detection::correctSpherePositionS(ent->getOldPosition(), ent->getPositionPointer(), 0.05, *sphere->getPositionPointer(), sphere->getRadius())) {
+								ent->updateVkObjectState();
+								ent->updateCamera();
+							}
+
+						}
+					}
+				}
+
+
+
 
 
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)

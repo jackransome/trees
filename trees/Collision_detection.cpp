@@ -287,6 +287,7 @@ glm::vec3 Collision_detection::pointToSegmentVector(const glm::vec3& point, cons
         // Segment is a point
         return segStart - point;
     }
+    
     const float t = std::max(0.0f, std::min(1.0f, glm::dot(point - segStart, segDir) / segLengthSquared));
     const glm::vec3 projection = segStart + t * segDir;
     return projection - point;
