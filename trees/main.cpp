@@ -10,6 +10,7 @@
 #include "Entity1.h"
 #include "Sphere.h"
 #include "SoundPlayer.h"
+#include "MainSystem.h"
 #include <cstdlib>  // For rand() and RAND_MAX
 
 
@@ -18,8 +19,17 @@ using std::chrono::duration_cast;
 
 const bool debug = false;
 
+MainSystem mainSystem;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	mainSystem.keyCallback(key, scancode, action, mods);
+}
+
 int main()
 {
+	
+	mainSystem.init();
+	glfwSetKeyCallback(globals::gfx.getWindowPointer(), key_callback);
 
 	using std::make_shared;
 	glm::vec3 camPos = glm::vec3(0, 0, 0);
@@ -43,34 +53,34 @@ int main()
 		soundPlayer.loadSound("distant_3", "sounds/distant_3.wav");
 		soundPlayer.loadSound("distant_4", "sounds/distant_4.wav");
 		soundPlayer.loadSound("Wind1", "sounds/Wind1.wav");
-		int music_id = soundPlayer.playSoundByName("Wind1", 0.3);
-		soundPlayer.loopSound(music_id);
+		/*int music_id = soundPlayer.playSoundByName("Wind1", 0.3);*/
+		/*soundPlayer.loopSound(music_id);*/
 		int counter = 0;
 		int countermax = 10000;
 		int selector = rand() % 3;
 		while (!globals::gfx.shouldClose) {
 			counter++;
-			if (counter == countermax) {
-				counter = 0;
-				countermax = 10000 + rand() % 30000;
-				if (selector == 0) {
-					soundPlayer.playSoundByName("distant_1", 0.02);
-				}
-				else if (selector == 1) {
-					soundPlayer.playSoundByName("distant_2", 0.35);
-				} 
-				else if (selector == 2) {
-					soundPlayer.playSoundByName("distant_3", 0.35);
-				}
-				else {
-					soundPlayer.playSoundByName("distant_4", 0.3);
-				}
-				selector += rand() % 3 + 1;
-				if (selector > 3) {
-					selector -= 4;
-				}
-				
-			}
+			//if (counter == countermax) {
+			//	counter = 0;
+			//	countermax = 10000 + rand() % 30000;
+			//	if (selector == 0) {
+			//		soundPlayer.playSoundByName("distant_1", 0.02);
+			//	}
+			//	else if (selector == 1) {
+			//		soundPlayer.playSoundByName("distant_2", 0.35);
+			//	} 
+			//	else if (selector == 2) {
+			//		soundPlayer.playSoundByName("distant_3", 0.35);
+			//	}
+			//	else {
+			//		soundPlayer.playSoundByName("distant_4", 0.3);
+			//	}
+			//	selector += rand() % 3 + 1;
+			//	if (selector > 3) {
+			//		selector -= 4;
+			//	}
+			//	
+			//}
 			auto newTime = time_point_cast<us>(Time::now());
 			auto frameTime = duration_cast<us>(newTime - currentTime).count();
 			currentTime = newTime;
@@ -174,10 +184,6 @@ int main()
 				}
 
 				accumulator -= globals::dt;
-			}
-			if (globals::input.keys.keyCounts["z"] > 0) {
-				std::cout << "gfx draw\n";
-				std::cout << "pos: " << globals::polyhedrons[4]->position.x << " , " << globals::polyhedrons[4]->position.y << " , " << globals::polyhedrons[4]->position.z << "\n";
 			}
 			
 			globals::gfx.run();
