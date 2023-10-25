@@ -27,6 +27,7 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainSystem.cpp" />
     <ClCompile Include="Polyhedron.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="MainSystem.h" />
     <ClInclude Include="Polyhedron.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundPlayer.h" />

@@ -170,10 +170,6 @@ int main()
 					}
 				}
 
-
-
-
-
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)
 				{
 					//globals::gfx.setObjectsWireFrame(true);
