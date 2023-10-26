@@ -30,6 +30,7 @@ void Graphics::framebufferResizeCallback(GLFWwindow* window, int width, int heig
 }
 
 void Graphics::initVulkan() {
+	objects.reserve(MAX_OBJECTS);
 	createInstance();
 	setupDebugCallback();
 	createSurface();
@@ -1910,13 +1911,13 @@ GLFWwindow* Graphics::getWindowPointer() {
 int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame) {
 	if (objects.size() >= MAX_OBJECTS) { return NULL; }
 
-	objects.push_back(Object());
-	objects[objects.size() - 1].position = position;
-	objects[objects.size() - 1].scale = scale;
-	objects[objects.size() - 1].model = &models[modelIndex];
-	objects[objects.size() - 1].wireFrame = wireFrame;
+	objects.emplace_back();
+	Object& newObject = objects.back();
+	newObject.position = position;
+	newObject.scale = scale;
+	newObject.model = &models[modelIndex];
+	newObject.wireFrame = wireFrame;
 	recalculateObjectMatrix(objects.size() - 1);
-
 	return objects.size() - 1;
 }
 

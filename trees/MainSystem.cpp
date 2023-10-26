@@ -11,16 +11,39 @@ MainSystem::~MainSystem()
 
 void MainSystem::run()
 {
-	while (!gfx.shouldClose) {
 
-		//run game logic
-		gameLogic();
+	auto previousTime = std::chrono::steady_clock::now();
+
+	while (!gfx.shouldClose) {
+		auto currentTime = std::chrono::steady_clock::now();
+		std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
+		previousTime = currentTime;
+
+		accumulator += elapsedTime;
+
+		// Update game logic as many times as possible within the fixed time step
+		while (accumulator >= FixedTimeStep) {
+			// Your game update logic here using FixedTimeStep as the delta time
+
+			//run game logic
+			gameLogic();
+
+			accumulator -= FixedTimeStep;
+		}
+
+
+
+		// Render game state here
+		// Optionally, you can use the value of accumulator/FixedTimeStep as an interpolation factor for smoother rendering
 
 		//draw
 		draw();
 
 		//execute draws with vulkan
 		gfx.run();
+
+		// You might want to add a sleep here to prevent the loop from running too fast and consuming too much CPU
+		// But remember that the actual sleep time should be adjusted based on how long the update and render took
 	}
 }
 
@@ -42,10 +65,12 @@ void MainSystem::init()
 
 void MainSystem::gameLogic()
 {
+	collisionSystem.correctCollisions(colliderComponentManager);
 }
 
 void MainSystem::draw()
 {
+
 }
 
 void MainSystem::loadResources()

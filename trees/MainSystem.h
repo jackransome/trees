@@ -3,6 +3,11 @@
 #include "Graphics.h"
 #include "SoundPlayer.h"
 #include "EntityManager.h"
+#include "EntityFactory.h"
+#include "ColliderComponentManager.h"
+#include "CollisionSystem.h"
+
+
 class MainSystem {
 public:
 	MainSystem();
@@ -14,9 +19,17 @@ private:
 	void gameLogic();
 	void draw();
 	void loadResources();
-	
+
+	const std::chrono::milliseconds FixedTimeStep = std::chrono::milliseconds(17);
+	std::chrono::milliseconds accumulator = std::chrono::milliseconds(0);
+
 	Graphics gfx;
 	Input input;
 	SoundPlayer soundPlayer;
+
 	EntityManager entityManager;
+	EntityFactory entityFactory;
+	ColliderComponentManager colliderComponentManager;
+	CollisionSystem collisionSystem;
+
 };

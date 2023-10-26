@@ -23,6 +23,8 @@
     <ClCompile Include="Csegment.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Entity1.cpp" />
+    <ClCompile Include="EntityFactory.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="input.cpp" />
@@ -35,10 +37,13 @@
     <ClCompile Include="World_generator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ColliderComponentManager.h" />
     <ClInclude Include="Collision_detection.h" />
     <ClInclude Include="Csegment.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Entity1.h" />
+    <ClInclude Include="EntityFactory.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
@@ -169,6 +174,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\VulkanSDK\1.1.97.0\Include;$(SolutionDir)\Libraries\glfw-3.2.1.bin.WIN64\include;$(SolutionDir)\Libraries\glm;$(SolutionDir)\Libraries\stb_image;$(SolutionDir)\Libraries\OpenAL\include;$(SolutionDir)\Libraries\libsndfile\include\;$(SolutionDir)\Libraries\tiny_obj_loader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
