@@ -44,5 +44,5 @@ void ColliderComponentManager::remove(int entity) {
 }
 
 Collider* ColliderComponentManager::get(int entity) {
-    return colliders[entityToIndex[entity]].get();
+    return colliders[entityToIndex.at(entity)].get();
 }
