@@ -2,7 +2,7 @@
 #include "Input.h"
 #include "Graphics.h"
 #include "SoundPlayer.h"
-
+#include "EntityManager.h"
 class MainSystem {
 public:
 	MainSystem();
@@ -15,9 +15,8 @@ private:
 	void draw();
 	void loadResources();
 	
-
 	Graphics gfx;
 	Input input;
 	SoundPlayer soundPlayer;
-	
+	EntityManager entityManager;
 };
