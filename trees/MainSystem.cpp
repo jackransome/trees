@@ -71,6 +71,7 @@ void MainSystem::gameLogic()
 void MainSystem::draw()
 {
 
+	gfx.clearDraws();
 }
 
 void MainSystem::loadResources()

@@ -31,6 +31,8 @@ int main()
 	mainSystem.init();
 	glfwSetKeyCallback(globals::gfx.getWindowPointer(), key_callback);
 
+	mainSystem.run();
+
 	using std::make_shared;
 	glm::vec3 camPos = glm::vec3(0, 0, 0);
 	std::cout << glm::dot(glm::vec3(1, 1, 1), glm::vec3(1, 1, 1)) << "\n";

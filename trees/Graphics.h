@@ -37,6 +37,11 @@ struct Object {
 	bool wireFrame = false;
 };
 
+struct DrawInstance {
+	Model* model;
+	glm::mat4 transformData;
+};
+
 struct UniformBufferObject {
 	//glm::mat4 model;
 	glm::mat4 view;
@@ -176,6 +181,10 @@ public:
 
 	void setCameraManually(glm::vec3 from, glm::vec3 to, glm::vec3 up);
 
+	void addDrawInstance(int objectIndex, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation); // WE WANT TO SPLIT OBJECTS INTO PERSISTENT AND TEMPORARY DRAWS
+
+	void clearDrawInstances();
+
 private:
 
 	bool cameraModeManual = false;
@@ -186,7 +195,10 @@ private:
 
 	std::vector<Object> objects;
 
-	const int MAX_OBJECTS = 1500;
+	std::vector<DrawInstance> drawInstances; 
+
+	const int MAX_OBJECTS = 1000;
+	const int MAX_DRAWINSTANCES = 1000;
 
 	int sizeOfAllModels = 0;
 

@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ColliderComponentManager.cpp" />
+    <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Collision_detection.cpp" />
     <ClCompile Include="Csegment.cpp" />
     <ClCompile Include="Cylinder.cpp" />
@@ -31,6 +33,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainSystem.cpp" />
     <ClCompile Include="Polyhedron.cpp" />
+    <ClCompile Include="RenderComponentManager.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -38,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColliderComponentManager.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Collision_detection.h" />
     <ClInclude Include="Csegment.h" />
     <ClInclude Include="Cylinder.h" />
@@ -49,6 +54,8 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="MainSystem.h" />
     <ClInclude Include="Polyhedron.h" />
+    <ClInclude Include="RenderComponentManager.h" />
+    <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="Sphere.h" />
@@ -174,7 +181,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\VulkanSDK\1.1.97.0\Include;$(SolutionDir)\Libraries\glfw-3.2.1.bin.WIN64\include;$(SolutionDir)\Libraries\glm;$(SolutionDir)\Libraries\stb_image;$(SolutionDir)\Libraries\OpenAL\include;$(SolutionDir)\Libraries\libsndfile\include\;$(SolutionDir)\Libraries\tiny_obj_loader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

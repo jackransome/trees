@@ -1994,6 +1994,24 @@ void Graphics::setCameraManually(glm::vec3 from, glm::vec3 to, glm::vec3 up){
 	cameraModeManual = true;
 }
 
+void Graphics::addDrawInstance(int modelIndex, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation){
+	if (drawInstances.size() >= MAX_DRAWINSTANCES) { std::cout << "<ERROR> : Reached MAX_DRAWINSTANCES\n";  return; }
+
+	drawInstances.emplace_back();
+	DrawInstance& newDrawInstance = drawInstances.back();
+	newDrawInstance.model = &models[modelIndex];
+	glm::quat quaternion = glm::quat(glm::radians(rotation));
+	glm::mat4 rotationMatrix = glm::mat4_cast(quaternion);
+
+	newDrawInstance.transformData = glm::translate(glm::mat4(1.0f), position);
+	newDrawInstance.transformData *= rotationMatrix;
+	newDrawInstance.transformData = glm::scale(newDrawInstance.transformData, scale);
+}
+
+void Graphics::clearDrawInstances(){
+	drawInstances.clear();
+}
+
 void Graphics::clearStorageBuffer()
 {
 	vkDestroyBuffer(device, storageBuffer, nullptr);
