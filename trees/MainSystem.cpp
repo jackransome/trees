@@ -2,7 +2,7 @@
 
 MainSystem::MainSystem()
 {
-
+	
 }
 
 MainSystem::~MainSystem()
@@ -61,6 +61,13 @@ void MainSystem::init()
 
 	// loading all sound
 	loadResources();
+
+	//setting up input
+	controlSystem.init(&colliderComponentManager, &input);
+
+	//setting up render system
+	renderSystem.init(&gfx, &colliderComponentManager, &renderComponentManager);
+
 }
 
 void MainSystem::gameLogic()

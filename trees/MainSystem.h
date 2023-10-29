@@ -6,7 +6,8 @@
 #include "EntityFactory.h"
 #include "ColliderComponentManager.h"
 #include "CollisionSystem.h"
-
+#include "ControlSystem.h"
+#include "RenderSystem.h"
 
 class MainSystem {
 public:
@@ -31,5 +32,8 @@ private:
 	EntityFactory entityFactory;
 	ColliderComponentManager colliderComponentManager;
 	CollisionSystem collisionSystem;
+	ControlSystem controlSystem;
+	RenderComponentManager renderComponentManager;
+	RenderSystem renderSystem;
 
 };

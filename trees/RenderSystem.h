@@ -5,10 +5,11 @@
 
 class RenderSystem {
 public:
-	RenderSystem(Graphics& gfx, ColliderComponentManager& colliderManager, RenderComponentManager& renderComponentManager);
+	RenderSystem();
+	void init(Graphics* gfx, ColliderComponentManager* colliderManager, RenderComponentManager* renderComponentManager);
 	void drawAll();
 private:
-	Graphics& gfx;
-	ColliderComponentManager& colliderManager;
-	RenderComponentManager& renderComponentManager;
+	Graphics* gfx;
+	ColliderComponentManager* colliderManager;
+	RenderComponentManager* renderComponentManager;
 };
