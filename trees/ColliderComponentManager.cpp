@@ -4,8 +4,8 @@ ColliderComponentManager::ColliderComponentManager(){
 
 }
 
-void ColliderComponentManager::addCylinder(int entity, glm::vec3 position, float length, float radius){
-    std::unique_ptr<Collider> cylinder = std::make_unique<CylinderCollider>(position, length, radius);
+void ColliderComponentManager::addCylinder(int entity, glm::vec3 position1, glm::vec3 position2, float radius){
+    std::unique_ptr<Collider> cylinder = std::make_unique<CylinderCollider>(position1, position2, radius);
     add(entity, std::move(cylinder));
 }
 

@@ -15,14 +15,16 @@ enum class ColliderType {
 class Collider {
 public:
     Collider(glm::vec3 p) : position(p) {}
-    glm::vec3 position;
+    glm::vec3 getPosition() { return position; }
     virtual ColliderType getType() const = 0;
+private:
+    glm::vec3 position;
 };
 
 class CylinderCollider : public Collider {
 public:
-    CylinderCollider(glm::vec3 p, float r, float l) : Collider(p), radius(r), length(l) {}
-    float length;
+    CylinderCollider(glm::vec3 p1, glm::vec3 p2, float r) : Collider(p1), position2(p2), radius(r) {}
+    glm::vec3 position2;
     float radius;
     ColliderType getType() const override { return ColliderType::Cylinder; }
 };
@@ -44,7 +46,7 @@ public:
 class ColliderComponentManager {
 public:
 	ColliderComponentManager();
-    void addCylinder(int entity, glm::vec3 position, float length, float radius);
+    void addCylinder(int entity, glm::vec3 position1, glm::vec3 position2, float radius);
     void addSphere(int entity, glm::vec3 position, float radius);
     void addBox(int entity, glm::vec3 position, glm::vec3 dimensions);
     Collider* get(int entity);

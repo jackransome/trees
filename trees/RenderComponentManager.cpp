@@ -27,3 +27,8 @@ void RenderComponentManager::add(int entity, int m){
     renderComponents.push_back(std::move(std::make_unique<RenderComponent>(entity, m)));
     entityToIndex[entity] = renderComponents.size() - 1;
 }
+
+RenderComponent* RenderComponentManager::get(int entity)
+{
+    return renderComponents[entityToIndex.at(entity)].get();
+}

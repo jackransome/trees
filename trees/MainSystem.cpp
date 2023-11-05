@@ -28,6 +28,9 @@ void MainSystem::run()
 			//run game logic
 			gameLogic();
 
+			//run sound system
+			soundPlayer.update();
+
 			accumulator -= FixedTimeStep;
 		}
 
@@ -72,13 +75,22 @@ void MainSystem::init()
 
 void MainSystem::gameLogic()
 {
+	//handle controls
+	controlSystem.run();
+	
+	//move things
+
+	//correct colliders
 	collisionSystem.correctCollisions(colliderComponentManager);
+
+	
 }
 
 void MainSystem::draw()
 {
+	gfx.clearDrawInstances();
 
-	gfx.clearDraws();
+	renderSystem.drawAll();
 }
 
 void MainSystem::loadResources()

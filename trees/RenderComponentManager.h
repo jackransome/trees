@@ -22,6 +22,7 @@ public:
     RenderComponentManager();
     void remove(int entity);
     void add(int entity, int m);
+    RenderComponent* get(int entity);
     const std::vector<std::unique_ptr<RenderComponent>>& getAll() const { return renderComponents; }
 private:
     std::vector<std::unique_ptr<RenderComponent>> renderComponents;  // Dense array
