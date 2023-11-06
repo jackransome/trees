@@ -9,7 +9,8 @@
 enum class ColliderType {
     Cylinder,
     Sphere,
-    Box
+    Box,
+    Hybrid
 };
 
 class Collider {
@@ -43,12 +44,20 @@ public:
     ColliderType getType() const override { return ColliderType::Box; }
 };
 
+class HybridCollider : public Collider {
+public:
+    HybridCollider(glm::vec3 p, float r) : Collider(p), radius(r) {}
+    float radius;
+    ColliderType getType() const override { return ColliderType::Hybrid; }
+};
+
 class ColliderComponentManager {
 public:
 	ColliderComponentManager();
     void addCylinder(int entity, glm::vec3 position1, glm::vec3 position2, float radius);
     void addSphere(int entity, glm::vec3 position, float radius);
     void addBox(int entity, glm::vec3 position, glm::vec3 dimensions);
+    void addHybrid(int entity, glm::vec3 position, float radius);
     Collider* get(int entity);
     void remove(int entity);
     const std::vector<std::unique_ptr<Collider>>& getAllColliders() const { return colliders; }

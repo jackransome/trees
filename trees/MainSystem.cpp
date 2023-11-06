@@ -1,6 +1,7 @@
 #include "MainSystem.h"
 
-MainSystem::MainSystem()
+MainSystem::MainSystem():
+entityFactory(colliderComponentManager, transformComponentManager, renderComponentManager, entityManager, controlSystem)
 {
 	
 }
@@ -69,7 +70,7 @@ void MainSystem::init()
 	controlSystem.init(&colliderComponentManager, &input);
 
 	//setting up render system
-	renderSystem.init(&gfx, &colliderComponentManager, &renderComponentManager);
+	renderSystem.init(&gfx, &transformComponentManager, &renderComponentManager);
 
 }
 

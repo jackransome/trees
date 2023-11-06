@@ -19,6 +19,11 @@ void ColliderComponentManager::addBox(int entity, glm::vec3 position, glm::vec3 
     add(entity, std::move(box));
 }
 
+void ColliderComponentManager::addHybrid(int entity, glm::vec3 position, float radius){
+    std::unique_ptr<Collider> hybrid = std::make_unique<HybridCollider>(position, radius);
+    add(entity, std::move(hybrid));
+}
+
 void ColliderComponentManager::add(int entity, std::unique_ptr<Collider> collider) {
     colliders.push_back(std::move(collider));
     entityToIndex[entity] = colliders.size() - 1;

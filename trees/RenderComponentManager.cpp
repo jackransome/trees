@@ -23,8 +23,8 @@ void RenderComponentManager::remove(int entity) {
     entityToIndex.erase(entity);
 }
 
-void RenderComponentManager::add(int entity, int m){
-    renderComponents.push_back(std::move(std::make_unique<RenderComponent>(entity, m)));
+void RenderComponentManager::add(int entity, int m, glm::vec3 s){
+    renderComponents.push_back(std::move(std::make_unique<RenderComponent>(entity, m, s)));
     entityToIndex[entity] = renderComponents.size() - 1;
 }
 

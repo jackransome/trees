@@ -35,5 +35,6 @@ private:
 	ControlSystem controlSystem;
 	RenderComponentManager renderComponentManager;
 	RenderSystem renderSystem;
+	TransformComponentManager transformComponentManager;
 
 };
