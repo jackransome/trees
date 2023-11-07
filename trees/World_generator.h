@@ -1,7 +1,6 @@
 #pragma once
-#include "Csegment.h"
-#include "Sphere.h"
-#include "Globals.h"
+#include "glm/glm.hpp"
+#include <vector>
 
 struct TreeNode {
 	glm::vec3 pos;

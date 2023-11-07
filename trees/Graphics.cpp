@@ -1994,7 +1994,7 @@ void Graphics::setCameraManually(glm::vec3 from, glm::vec3 to, glm::vec3 up){
 	cameraModeManual = true;
 }
 
-void Graphics::addDrawInstance(int modelIndex, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation){
+/*void Graphics::addDrawInstance(int modelIndex, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation) {
 	if (drawInstances.size() >= MAX_DRAWINSTANCES) { std::cout << "<ERROR> : Reached MAX_DRAWINSTANCES\n";  return; }
 
 	drawInstances.emplace_back();
@@ -2008,9 +2008,9 @@ void Graphics::addDrawInstance(int modelIndex, glm::vec3 position, glm::vec3 sca
 	newDrawInstance.transformData = glm::scale(newDrawInstance.transformData, scale);
 }
 
-void Graphics::clearDrawInstances(){
+void Graphics::clearDrawInstances() {
 	drawInstances.clear();
-}
+}*/
 
 void Graphics::clearStorageBuffer()
 {

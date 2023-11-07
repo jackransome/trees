@@ -19,49 +19,39 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ColliderComponentManager.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Collision_detection.cpp" />
     <ClCompile Include="ControlSystem.cpp" />
-    <ClCompile Include="Csegment.cpp" />
-    <ClCompile Include="Cylinder.cpp" />
-    <ClCompile Include="Entity1.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityManager.cpp" />
-    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainSystem.cpp" />
-    <ClCompile Include="Polyhedron.cpp" />
     <ClCompile Include="RenderComponentManager.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
-    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="TransformComponentManager.cpp" />
     <ClCompile Include="World_generator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="ColliderComponentManager.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Collision_detection.h" />
     <ClInclude Include="ControlSystem.h" />
-    <ClInclude Include="Csegment.h" />
-    <ClInclude Include="Cylinder.h" />
-    <ClInclude Include="Entity1.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="EntityManager.h" />
-    <ClInclude Include="Globals.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MainSystem.h" />
-    <ClInclude Include="Polyhedron.h" />
     <ClInclude Include="RenderComponentManager.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundPlayer.h" />
-    <ClInclude Include="Sphere.h" />
     <ClInclude Include="TransformComponentManager.h" />
     <ClInclude Include="World_generator.h" />
   </ItemGroup>

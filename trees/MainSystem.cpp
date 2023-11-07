@@ -1,7 +1,8 @@
 #include "MainSystem.h"
 
-MainSystem::MainSystem():
-entityFactory(colliderComponentManager, transformComponentManager, renderComponentManager, entityManager, controlSystem)
+MainSystem::MainSystem() :
+	entityFactory(colliderComponentManager, transformComponentManager, renderComponentManager, entityManager, controlSystem),
+	cameraSystem(gfx)
 {
 	
 }
@@ -17,10 +18,14 @@ void MainSystem::run()
 
 	while (!gfx.shouldClose) {
 		auto currentTime = std::chrono::steady_clock::now();
-		std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
+		auto elapsedTimeInMicro = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
 		previousTime = currentTime;
 
+		// Convert microseconds to milliseconds before adding to the accumulator to prevent truncation to zero.
+		std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTimeInMicro);
+
 		accumulator += elapsedTime;
+
 
 		// Update game logic as many times as possible within the fixed time step
 		while (accumulator >= FixedTimeStep) {
@@ -28,13 +33,13 @@ void MainSystem::run()
 
 			//run game logic
 			gameLogic();
-
+			
 			//run sound system
 			soundPlayer.update();
 
 			accumulator -= FixedTimeStep;
 		}
-
+		std::cout << "running\n";
 
 
 		// Render game state here
@@ -78,6 +83,7 @@ void MainSystem::gameLogic()
 {
 	//handle controls
 	controlSystem.run();
+	controlSystem.changeCameraAngle(cameraSystem);
 	
 	//move things
 
@@ -89,7 +95,8 @@ void MainSystem::gameLogic()
 
 void MainSystem::draw()
 {
-	gfx.clearDrawInstances();
+	cameraSystem.updateGfx();
+	//gfx.clearDrawInstances();
 
 	renderSystem.drawAll();
 }

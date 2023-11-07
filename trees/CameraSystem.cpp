@@ -4,13 +4,13 @@ CameraSystem::CameraSystem(Graphics& g) : gfx(g)
 {
 }
 
-void CameraSystem::moveWithMouse(Input& input)
+void CameraSystem::moveWithMouse(Input* input)
 {
 	glm::vec3 cameraAngleDelta = glm::vec3(0, 0, 0);
 
 	// get camera angle delta from mouse input
-	cameraAngleDelta.y = mouseSensitivity * float(input.windowHeight / 2 - input.mouseYpos);
-	cameraAngleDelta.x = mouseSensitivity * float(input.windowWidth / 2 - input.mouseXpos);
+	cameraAngleDelta.y = mouseSensitivity * float(input->windowHeight / 2 - input->mouseYpos);
+	cameraAngleDelta.x = mouseSensitivity * float(input->windowWidth / 2 - input->mouseXpos);
 
 	//calculate new right axis
 
@@ -42,4 +42,16 @@ void CameraSystem::setPosition(glm::vec3 pos)
 void CameraSystem::updateGfx()
 {
 	gfx.setCameraManually(from, to, up);
+}
+
+glm::vec3 CameraSystem::getUp() {
+	return up;
+}
+
+glm::vec3 CameraSystem::getforward(){
+	return forward;
+}
+
+glm::vec3 CameraSystem::getRight(){
+	return right;
 }

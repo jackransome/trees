@@ -1,16 +1,10 @@
-#include "Globals.h"
 
 #include <windows.h>
 #include <chrono>
 
-//for testing
 #include <thread>
-#include "Globals.h"
-#include "Csegment.h"
-#include "Entity1.h"
-#include "Sphere.h"
-#include "SoundPlayer.h"
 #include "MainSystem.h"
+#include "SoundPlayer.h"
 #include <cstdlib>  // For rand() and RAND_MAX
 
 
@@ -29,10 +23,11 @@ int main()
 {
 	
 	mainSystem.init();
-	glfwSetKeyCallback(globals::gfx.getWindowPointer(), key_callback);
+	glfwSetKeyCallback(mainSystem.getGfx()->getWindowPointer(), key_callback);
 
 	mainSystem.run();
-
+	
+	/*
 	using std::make_shared;
 	glm::vec3 camPos = glm::vec3(0, 0, 0);
 	std::cout << glm::dot(glm::vec3(1, 1, 1), glm::vec3(1, 1, 1)) << "\n";
@@ -55,8 +50,8 @@ int main()
 		soundPlayer.loadSound("distant_3", "sounds/distant_3.wav");
 		soundPlayer.loadSound("distant_4", "sounds/distant_4.wav");
 		soundPlayer.loadSound("Wind1", "sounds/Wind1.wav");
-		/*int music_id = soundPlayer.playSoundByName("Wind1", 0.3);*/
-		/*soundPlayer.loopSound(music_id);*/
+		//int music_id = soundPlayer.playSoundByName("Wind1", 0.3);
+		//soundPlayer.loopSound(music_id);
 		int counter = 0;
 		int countermax = 10000;
 		int selector = rand() % 3;
@@ -186,15 +181,15 @@ int main()
 			
 			globals::gfx.run();
 		}
-	}
+	} 
 	catch (const std::runtime_error& e)
 	{
 		std::cerr << e.what() << std::endl;
 		for (int i = 0; i < 100000000; i++) {}
 		return EXIT_FAILURE;
-	}
+	}*/
 
-	globals::gfx.cleanup();
+	//globals::gfx.cleanup();
 
 	return EXIT_SUCCESS;
 }

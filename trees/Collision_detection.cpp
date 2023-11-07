@@ -3,7 +3,6 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <iostream>
-#include "Globals.h"
 float Collision_detection::getDistanceFromSeg(const glm::vec3& point, const glm::vec3& start, const glm::vec3& end, const float& diameter) {
     // Calculate the vector from the start to the end of the segment
     glm::vec3 segVector = end - start;

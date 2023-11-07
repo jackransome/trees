@@ -1,6 +1,6 @@
 #pragma once
-#include "Input.h"
 #include "Graphics.h"
+#include "Input.h"
 #include "SoundPlayer.h"
 #include "EntityManager.h"
 #include "EntityFactory.h"
@@ -16,6 +16,7 @@ public:
 	void run();
 	void keyCallback(int key, int scancode, int action, int mods);
 	void init();
+	Graphics* getGfx() { return &gfx; }
 private:
 	void gameLogic();
 	void draw();
@@ -36,5 +37,6 @@ private:
 	RenderComponentManager renderComponentManager;
 	RenderSystem renderSystem;
 	TransformComponentManager transformComponentManager;
+	CameraSystem cameraSystem;
 
 };

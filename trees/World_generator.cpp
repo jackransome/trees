@@ -2,7 +2,7 @@
 #include <cstdlib>  // For rand() and RAND_MAX
 
 World_generator::World_generator() {
-    using std::make_shared;
+    //using std::make_shared;
     nodes = 3;
     // Allocate memory for points array
     points = (glm::vec3*)malloc(nodes * sizeof(glm::vec3));
@@ -43,11 +43,11 @@ World_generator::World_generator() {
                 }
                 float temp = adjacencyMatrix[i][j];
                 glm::vec3 temp2 = points[i];
-                globals::polyhedrons.push_back(make_shared<Csegment>(points[i], points[j], adjacencyMatrix[i][j]));
+                //globals::polyhedrons.push_back(make_shared<Csegment>(points[i], points[j], adjacencyMatrix[i][j]));
             }
         }
         if (largest > 0.1) {
-            globals::polyhedrons.push_back(make_shared<Sphere>(points[i], largest/1.99));
+            //globals::polyhedrons.push_back(make_shared<Sphere>(points[i], largest/1.99));
         }
     }
     
@@ -69,14 +69,14 @@ void World_generator::growTree(TreeNode* node, int depth) {
 }
 
 void World_generator::addObjects(TreeNode node){
-    using std::make_shared;
+    //using std::make_shared;
     float largest = node.radius;
     for (int i = 0; i < node.next.size(); i++) {
         if (node.next[i].radius > largest) {
             largest = node.next[i].radius;
         }
-        globals::polyhedrons.push_back(make_shared<Csegment>(node.pos, node.next[i].pos, node.next[i].radius));
+        //globals::polyhedrons.push_back(make_shared<Csegment>(node.pos, node.next[i].pos, node.next[i].radius));
         addObjects(node.next[i]);
     }
-    globals::polyhedrons.push_back(make_shared<Sphere>(node.pos, largest/1.99));
+    //globals::polyhedrons.push_back(make_shared<Sphere>(node.pos, largest/1.99));
 }
