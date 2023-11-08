@@ -1220,13 +1220,24 @@ void Graphics::createIndexBuffer() {
 }
 
 void Graphics::createStorageBuffer() {
+
 	std::vector<glm::mat4> storageBufferData;
-	for (int i = 0; i < objects.size(); i++) {
-		storageBufferData.push_back(objects[i].transformData);
+
+	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * 1;
+	if (drawInstances.size() == 0) {
+		storageBufferData.push_back(glm::mat4(0));
+	}
+	else {
+		for (int i = 0; i < drawInstances.size(); i++) {
+			storageBufferData.push_back(drawInstances[i].transformData);
+		}
+		VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * drawInstances.size();
 	}
 
-	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * objects.size();
-	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_OBJECTS;
+
+
+	
+	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_DRAWINSTANCES;
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
@@ -1248,12 +1259,12 @@ void Graphics::createStorageBuffer() {
 void Graphics::updateStorageBuffer() {
 
 	std::vector<glm::mat4> storageBufferData;
-	for (int i = 0; i < objects.size(); i++) {
-		storageBufferData.push_back(objects[i].transformData);
+	for (int i = 0; i < drawInstances.size(); i++) {
+		storageBufferData.push_back(drawInstances[i].transformData);
 	}
 
-	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * objects.size();
-	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_OBJECTS;
+	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * drawInstances.size();
+	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_DRAWINSTANCES;
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
@@ -1491,11 +1502,11 @@ void Graphics::createCommandBuffers() {
 		vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 		vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-		for (int j = 0; j < objects.size(); j++) {
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, objects[j].wireFrame ? lineGraphicsPipeline : triangleGraphicsPipeline);
+		for (int j = 0; j < drawInstances.size(); j++) {
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, false ? lineGraphicsPipeline : triangleGraphicsPipeline);
 
 			vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(int), (void*)&j);
-			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(objects[j].model->size), 1, static_cast<uint32_t>(objects[j].model->offset), 0, 0);
+			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(drawInstances[j].model->size), 1, static_cast<uint32_t>(drawInstances[j].model->offset), 0, 0);
 		}
 
 		vkCmdEndRenderPass(commandBuffers[i]);
@@ -1994,7 +2005,7 @@ void Graphics::setCameraManually(glm::vec3 from, glm::vec3 to, glm::vec3 up){
 	cameraModeManual = true;
 }
 
-/*void Graphics::addDrawInstance(int modelIndex, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation) {
+void Graphics::addDrawInstance(int modelIndex, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation) {
 	if (drawInstances.size() >= MAX_DRAWINSTANCES) { std::cout << "<ERROR> : Reached MAX_DRAWINSTANCES\n";  return; }
 
 	drawInstances.emplace_back();
@@ -2010,7 +2021,7 @@ void Graphics::setCameraManually(glm::vec3 from, glm::vec3 to, glm::vec3 up){
 
 void Graphics::clearDrawInstances() {
 	drawInstances.clear();
-}*/
+}
 
 void Graphics::clearStorageBuffer()
 {

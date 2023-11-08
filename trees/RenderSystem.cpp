@@ -21,7 +21,7 @@ void RenderSystem::drawAll()
         if (transform) {
             glm::vec3 position = transform->getPosition();
             glm::vec3 rotation = transform->getRotation();
-            //gfx->addDrawInstance(allRenderComponents[i]->getMeshIndex(), position, allRenderComponents[i]->getScale(), rotation);
+            gfx->addDrawInstance(allRenderComponents[i]->getMeshIndex(), position, allRenderComponents[i]->getScale(), rotation);
             // Use the transform position and rotation for rendering...
             // Set model matrix, draw the mesh, etc.
         }

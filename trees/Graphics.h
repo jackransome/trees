@@ -38,10 +38,10 @@ struct Object {
 	bool wireFrame = false;
 };
 
-//struct DrawInstance {
-//	Model* model;
-//	glm::mat4 transformData;
-//};
+struct DrawInstance {
+	Model* model;
+	glm::mat4 transformData;
+};
 
 struct UniformBufferObject {
 	//glm::mat4 model;
@@ -182,9 +182,9 @@ public:
 
 	void setCameraManually(glm::vec3 from, glm::vec3 to, glm::vec3 up);
 
-	//void addDrawInstance(int objectIndex, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation); // WE WANT TO SPLIT OBJECTS INTO PERSISTENT AND TEMPORARY DRAWS
+	void addDrawInstance(int objectIndex, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation); // WE WANT TO SPLIT OBJECTS INTO PERSISTENT AND TEMPORARY DRAWS
 
-	//void clearDrawInstances();
+	void clearDrawInstances();
 
 private:
 
@@ -196,7 +196,7 @@ private:
 
 	std::vector<Object> objects;
 
-	//std::vector<DrawInstance> drawInstances; 
+	std::vector<DrawInstance> drawInstances; 
 
 	const int MAX_OBJECTS = 1000;
 	const int MAX_DRAWINSTANCES = 1000;
