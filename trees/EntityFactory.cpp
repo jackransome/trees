@@ -34,5 +34,5 @@ void EntityFactory::addCylinder(glm::vec3 p1, glm::vec3 p2, float radius){
 
 	glm::vec3 rotation = glm::degrees(eulerAngles);
 	transformComponentManager.add(entity, (p1 + p2) / 2.0f, rotation);
-	renderComponentManager.add(entity, 0, glm::vec3(glm::distance(p1, p2), radius * 2, radius * 2));
+	renderComponentManager.add(entity, 0, glm::vec3(radius * 2, glm::distance(p1, p2), radius * 2));
 }

@@ -5,13 +5,13 @@
 class ControlSystem {
 public:
 	ControlSystem();
-	void init(ColliderComponentManager* c, Input* i);
+	void init(ColliderComponentManager* c, Input* i, CameraSystem* cs);
 	void run();
 	void setControlled(int entity);
-	void changeCameraAngle(CameraSystem& cameraSystem);
+	void changeCameraAngle();
 private:
+	CameraSystem* cameraSystem;
 	Input* input;
-	
 	ColliderComponentManager* colliderComponentManager;
 	int controlledEntity = -1;;
 };

@@ -17,6 +17,7 @@ class Collider {
 public:
     Collider(glm::vec3 p) : position(p) {}
     glm::vec3 getPosition() { return position; }
+    void setPosition(glm::vec3 p) { position = p; }
     virtual ColliderType getType() const = 0;
 private:
     glm::vec3 position;

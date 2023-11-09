@@ -17,6 +17,32 @@ MainSystem::~MainSystem()
 {
 }
 
+void MainSystem::init()
+{
+	// setting up graphics and window
+	gfx.init();
+	
+	// setting up input
+	input.init(gfx.getWindowPointer());
+	
+	
+	// setting up sound
+	soundPlayer.setGlobalVolume(1);
+
+	// loading all sound
+	loadResources();
+
+	//setting up input
+	controlSystem.init(&colliderComponentManager, &input, &cameraSystem);
+
+	//setting up render system
+	renderSystem.init(&gfx, &transformComponentManager, &renderComponentManager);
+
+	entityFactory.addCylinder(glm::vec3(3), glm::vec3(3, 1, 1), 1);
+	entityFactory.addPlayer(glm::vec3(0));
+
+}
+
 void MainSystem::run()
 {
 
@@ -57,37 +83,12 @@ void MainSystem::run()
 
 }
 
-void MainSystem::init()
-{
-	// setting up graphics and window
-	gfx.init();
-	
-	// setting up input
-	input.init(gfx.getWindowPointer());
-	
-	
-	// setting up sound
-	soundPlayer.setGlobalVolume(1);
-
-	// loading all sound
-	loadResources();
-
-	//setting up input
-	controlSystem.init(&colliderComponentManager, &input);
-
-	//setting up render system
-	renderSystem.init(&gfx, &transformComponentManager, &renderComponentManager);
-
-	entityFactory.addCylinder(glm::vec3(3), glm::vec3(3, 1, 1), 1);
-
-}
-
 void MainSystem::gameLogic()
 {
 	input.run();
 	//handle controls
 	controlSystem.run();
-	controlSystem.changeCameraAngle(cameraSystem);
+	controlSystem.changeCameraAngle();
 	
 	//move things
 

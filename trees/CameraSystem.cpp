@@ -9,8 +9,8 @@ void CameraSystem::moveWithMouse(Input* input)
 	glm::vec3 cameraAngleDelta = glm::vec3(0, 0, 0);
 
 	// get camera angle delta from mouse input
-	cameraAngleDelta.y = mouseSensitivity * float(input->windowHeight / 2 - input->mouseYpos);
-	cameraAngleDelta.x = mouseSensitivity * float(input->windowWidth / 2 - input->mouseXpos);
+	//cameraAngleDelta.y = mouseSensitivity * float(input->windowHeight / 2 - input->mouseYpos);
+	//cameraAngleDelta.x = mouseSensitivity * float(input->windowWidth / 2 - input->mouseXpos);
 
 	//calculate new right axis
 
@@ -32,6 +32,8 @@ void CameraSystem::moveWithMouse(Input* input)
 
 	from = position;
 	to = position + forward;
+
+
 }
 
 void CameraSystem::setPosition(glm::vec3 pos)
