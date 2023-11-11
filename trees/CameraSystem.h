@@ -19,5 +19,5 @@ private:
 	glm::vec3 forward = glm::vec3(0, 0, 1);
 	glm::vec3 right = glm::vec3(1, 0, 0);
 	glm::vec3 position = glm::vec3(0,0,0);
-	float mouseSensitivity = 0.01f;
+	float mouseSensitivity = 0.005f;
 };

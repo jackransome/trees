@@ -38,6 +38,9 @@ void MainSystem::init()
 	//setting up render system
 	renderSystem.init(&gfx, &transformComponentManager, &renderComponentManager);
 
+	for (int i = 0; i < 990; i++) {
+		entityFactory.addCylinder(glm::vec3(-2), glm::vec3(-4, 2, -2), 0.5);
+	}
 	entityFactory.addCylinder(glm::vec3(3), glm::vec3(3, 1, 1), 1);
 	entityFactory.addPlayer(glm::vec3(0));
 
@@ -52,8 +55,12 @@ void MainSystem::run()
 	const float dt = 1000000.0f / 60.0f;
 
 	glm::vec3 cameraOffset{ 0, 2, 0 };
+	int frames = 0;
+	auto FPSTimer = time_point_cast<us>(Time::now());
+
 
 	while (!gfx.shouldClose) {
+
 		auto newTime = time_point_cast<us>(Time::now());
 		auto frameTime = duration_cast<us>(newTime - currentTime).count();
 		currentTime = newTime;
@@ -73,12 +80,24 @@ void MainSystem::run()
 			accumulator -= dt;
 		}
 
+		frames++;
+		if (frames == 50) {
+			auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time_point_cast<us>(Time::now()) - FPSTimer).count();
+			//auto now = std::chrono::steady_clock::now();
+
+			float fps = 1000.0f * frames / elapsed; // Calculate FPS
+			std::cout << "FPS: " << fps << "\n";
+
+			FPSTimer = time_point_cast<us>(Time::now()); // Reset the timer
+			frames = 0; // Reset frame count
+		}
+
 		//draw
 		draw();
 
 		//execute draws with vulkan
 		gfx.run();
-		std::cout << "running\n";
+		//std::cout << "running\n";
 	}
 
 }
