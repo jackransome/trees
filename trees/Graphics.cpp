@@ -1263,7 +1263,7 @@ void Graphics::updateStorageBuffer() {
 	std::vector<glm::mat4> storageBufferData;
 
 	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * 1;
-	if (drawInstances.size() == 0) {
+	if (totalDrawInstances == 0) {
 		storageBufferData.push_back(glm::mat4(0));
 	}
 	else {

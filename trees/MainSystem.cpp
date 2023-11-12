@@ -119,15 +119,9 @@ void MainSystem::gameLogic()
 
 void MainSystem::draw()
 {
+	gfx.clearDrawInstances();
 	cameraSystem.updateGfx();
-	if (!x) {
-		x = true;
-		
-		renderSystem.drawAll();
-	}
-	
-	//gfx.clearDrawInstances();
-
+	renderSystem.drawAll();
 	
 }
 
