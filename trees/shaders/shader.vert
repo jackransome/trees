@@ -10,7 +10,7 @@ layout(binding = 0) uniform UniformBufferObject {
 
 layout(binding=2,set=0)buffer TRANSFORM_DATA
 {
-  mat4 transform[500];
+  mat4 transform[1000];
 } objects;
 
 layout(location = 0) in vec3 inPosition;
@@ -35,13 +35,12 @@ out gl_PerVertex {
 
 void main() {
 	//applying the view matrix, projection matrix, and object matrix to the point
-    gl_Position = ubo.proj * ubo.view * objects.transform[object.index] * vec4(inPosition, 1.0);
-
+    gl_Position = ubo.proj * ubo.view * objects.transform[gl_InstanceIndex] * vec4(inPosition, 1.0);
     fragColor = inColor;
 
-	FragPos = vec3(objects.transform[object.index] * vec4(inPosition, 1.0));
+	FragPos = vec3(objects.transform[gl_InstanceIndex] * vec4(inPosition, 1.0));
 
-    Normal = mat3(transpose(inverse(objects.transform[object.index]))) * inNormal;
+    Normal = mat3(transpose(inverse(objects.transform[gl_InstanceIndex]))) * inNormal;
 
 	cameraPos = ubo.cameraPos;
 

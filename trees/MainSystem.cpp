@@ -37,11 +37,11 @@ void MainSystem::init()
 
 	//setting up render system
 	renderSystem.init(&gfx, &transformComponentManager, &renderComponentManager);
-
+	entityFactory.addCylinder(glm::vec3(3), glm::vec3(3, 1, 1), 1);
 	for (int i = 0; i < 990; i++) {
 		entityFactory.addCylinder(glm::vec3(-2), glm::vec3(-4, 2, -2), 0.5);
 	}
-	entityFactory.addCylinder(glm::vec3(3), glm::vec3(3, 1, 1), 1);
+	
 	entityFactory.addPlayer(glm::vec3(0));
 
 }
@@ -120,9 +120,15 @@ void MainSystem::gameLogic()
 void MainSystem::draw()
 {
 	cameraSystem.updateGfx();
-	gfx.clearDrawInstances();
+	if (!x) {
+		x = true;
+		
+		renderSystem.drawAll();
+	}
+	
+	//gfx.clearDrawInstances();
 
-	renderSystem.drawAll();
+	
 }
 
 void MainSystem::loadResources()

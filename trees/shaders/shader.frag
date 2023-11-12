@@ -87,7 +87,6 @@ float cnoise(vec3 P){
 }
 
 void main() {
-	
     //outColor = fragColor + vec4(test, 1);// texture(texSampler, fragTexCoord);
 	vec3 tex = texture(texSampler, fragTexCoord).rgb;
 	vec3 lightColor = vec3(1,1,1);

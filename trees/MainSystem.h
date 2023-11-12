@@ -38,5 +38,6 @@ private:
 	RenderSystem renderSystem;
 	TransformComponentManager transformComponentManager;
 	CameraSystem cameraSystem;
+	int x = false;
 
 };

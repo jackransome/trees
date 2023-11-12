@@ -196,7 +196,13 @@ private:
 
 	std::vector<Object> objects;
 
-	std::vector<DrawInstance> drawInstances; 
+	std::vector<std::vector<DrawInstance>> drawInstances;
+
+	int totalDrawInstances = 0;
+
+	std::vector<int> startingInstanceIDs;
+
+	bool storageBufferCreated = false;
 
 	const int MAX_OBJECTS = 1000;
 	const int MAX_DRAWINSTANCES = 1000;
@@ -298,6 +304,8 @@ private:
 	void loadObjects();
 
 	void setUpCamera();
+
+	void updateStartingInstanceIDs();
 
 	VkResult CreateDebugReportCallbackEXT(VkInstance instance, const VkDebugReportCallbackCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback) {
 		auto func = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT");

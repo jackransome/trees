@@ -1142,38 +1142,38 @@ int Graphics::loadOBJFile(std::string path, glm::vec4 colour, glm::vec3 scale) {
 		for (const auto& index : shape.mesh.indices) {
 			Vertex vertex = {};
 
-			vertex.pos = {
-				attrib.vertices[3 * index.vertex_index + 0] * scale.x,
-				attrib.vertices[3 * index.vertex_index + 1] * scale.y,
-				attrib.vertices[3 * index.vertex_index + 2] * scale.z
-			};
+vertex.pos = {
+	attrib.vertices[3 * index.vertex_index + 0] * scale.x,
+	attrib.vertices[3 * index.vertex_index + 1] * scale.y,
+	attrib.vertices[3 * index.vertex_index + 2] * scale.z
+};
 
-			vertex.normal = {
-				attrib.normals[3 * index.normal_index + 0],
-				attrib.normals[3 * index.normal_index + 1],
-				attrib.normals[3 * index.normal_index + 2]
-			};
-			if (attrib.texcoords.size() != 0) {
-				vertex.texCoord = {
-					attrib.texcoords[2 * index.texcoord_index + 0],
-					1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-				};
-			}
-			else {
-				vertex.texCoord = glm::vec3(0, 0, 0);
-			}
+vertex.normal = {
+	attrib.normals[3 * index.normal_index + 0],
+	attrib.normals[3 * index.normal_index + 1],
+	attrib.normals[3 * index.normal_index + 2]
+};
+if (attrib.texcoords.size() != 0) {
+	vertex.texCoord = {
+		attrib.texcoords[2 * index.texcoord_index + 0],
+		1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+	};
+}
+else {
+	vertex.texCoord = glm::vec3(0, 0, 0);
+}
 
 
-			vertex.color = colour;// {1.0f, 1.0f, 1.0f, 1};
+vertex.color = colour;// {1.0f, 1.0f, 1.0f, 1};
 
-			//if (uniqueVertices.count(vertex) == 0) {
+//if (uniqueVertices.count(vertex) == 0) {
 
-			uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-			vertices.push_back(vertex);
-			//}
+uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+vertices.push_back(vertex);
+//}
 
-			indices.push_back(uniqueVertices[vertex]);
-			numberOfVertices++;
+indices.push_back(uniqueVertices[vertex]);
+numberOfVertices++;
 		}
 	}
 	return numberOfVertices;
@@ -1224,19 +1224,21 @@ void Graphics::createStorageBuffer() {
 	std::vector<glm::mat4> storageBufferData;
 
 	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * 1;
-	if (drawInstances.size() == 0) {
+	if (totalDrawInstances == 0) {
 		storageBufferData.push_back(glm::mat4(0));
 	}
 	else {
 		for (int i = 0; i < drawInstances.size(); i++) {
-			storageBufferData.push_back(drawInstances[i].transformData);
+			for (int j = 0; j < drawInstances[i].size(); j++) {
+				storageBufferData.push_back(drawInstances[i][j].transformData);
+			}
 		}
-		VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * drawInstances.size();
+		VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * totalDrawInstances;
 	}
 
 
 
-	
+
 	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_DRAWINSTANCES;
 
 	VkBuffer stagingBuffer;
@@ -1259,11 +1261,20 @@ void Graphics::createStorageBuffer() {
 void Graphics::updateStorageBuffer() {
 
 	std::vector<glm::mat4> storageBufferData;
-	for (int i = 0; i < drawInstances.size(); i++) {
-		storageBufferData.push_back(drawInstances[i].transformData);
-	}
 
-	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * drawInstances.size();
+	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * 1;
+	if (drawInstances.size() == 0) {
+		storageBufferData.push_back(glm::mat4(0));
+	}
+	else {
+		for (int i = 0; i < drawInstances.size(); i++) {
+			for (int j = 0; j < drawInstances[i].size(); j++) {
+				storageBufferData.push_back(drawInstances[i][j].transformData);
+			}
+		}
+		int test1 = 
+		bufferSize = sizeof(storageBufferData[0]) * totalDrawInstances;
+	}
 	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_DRAWINSTANCES;
 
 	VkBuffer stagingBuffer;
@@ -1506,7 +1517,7 @@ void Graphics::createCommandBuffers() {
 			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, false ? lineGraphicsPipeline : triangleGraphicsPipeline);
 
 			vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(int), (void*)&j);
-			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(drawInstances[j].model->size), 1, static_cast<uint32_t>(drawInstances[j].model->offset), 0, 0);
+			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(models[j].size), drawInstances[j].size(), static_cast<uint32_t>(models[j].offset), 0, startingInstanceIDs[j]);
 		}
 
 		vkCmdEndRenderPass(commandBuffers[i]);
@@ -1881,6 +1892,11 @@ void Graphics::loadModels()
 	loadModel("models/xyzOrigin.obj", glm::vec4(0.1, 0.9, 0.1, 1), glm::vec3(1));
 	loadModel("models/small_sphere.obj", glm::vec4(0.7, 0.9, 0.1, 1), glm::vec3(1));
 	loadModel("models/testUV.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1));
+
+	for (int i = 0; i < models.size(); i++) {
+		drawInstances.push_back(std::vector<DrawInstance>());
+		startingInstanceIDs.push_back(0);
+	}
 }
 
 void Graphics::loadObjects() {
@@ -1890,6 +1906,13 @@ void Graphics::loadObjects() {
 void Graphics::setUpCamera() {
 	cameraAngle = glm::vec3(1, 1, 1);
 	cameraPosition = glm::vec3(0, 0, 0);
+}
+
+void Graphics::updateStartingInstanceIDs(){
+	startingInstanceIDs[0] = 0;
+	for (int i = 1; i < startingInstanceIDs.size(); i++) {\
+		startingInstanceIDs[i] = drawInstances[i-1].size() + startingInstanceIDs[i - 1];
+	}
 }
 
 void Graphics::changeCameraPos(float x, float y, float z) {
@@ -2006,10 +2029,10 @@ void Graphics::setCameraManually(glm::vec3 from, glm::vec3 to, glm::vec3 up){
 }
 
 void Graphics::addDrawInstance(int modelIndex, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation) {
-	if (drawInstances.size() >= MAX_DRAWINSTANCES) { std::cout << "<ERROR> : Reached MAX_DRAWINSTANCES\n";  return; }
+	if (totalDrawInstances >= MAX_DRAWINSTANCES) { std::cout << "<ERROR> : Reached MAX_DRAWINSTANCES\n";  return; }
 
-	drawInstances.emplace_back();
-	DrawInstance& newDrawInstance = drawInstances.back();
+	drawInstances[modelIndex].emplace_back();
+	DrawInstance& newDrawInstance = drawInstances[modelIndex].back();
 	newDrawInstance.model = &models[modelIndex];
 	glm::quat quaternion = glm::quat(glm::radians(rotation));
 	glm::mat4 rotationMatrix = glm::mat4_cast(quaternion);
@@ -2017,10 +2040,16 @@ void Graphics::addDrawInstance(int modelIndex, glm::vec3 position, glm::vec3 sca
 	newDrawInstance.transformData = glm::translate(glm::mat4(1.0f), position);
 	newDrawInstance.transformData *= rotationMatrix;
 	newDrawInstance.transformData = glm::scale(newDrawInstance.transformData, scale);
+
+	totalDrawInstances++;
 }
 
 void Graphics::clearDrawInstances() {
-	drawInstances.clear();
+	for (int i = 0; i < drawInstances.size(); i++) {
+		drawInstances[i].clear();
+	}
+	
+	totalDrawInstances = 0;
 }
 
 void Graphics::clearStorageBuffer()
