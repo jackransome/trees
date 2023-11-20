@@ -36,3 +36,10 @@ void EntityFactory::addCylinder(glm::vec3 p1, glm::vec3 p2, float radius){
 	transformComponentManager.add(entity, (p1 + p2) / 2.0f, rotation);
 	renderComponentManager.add(entity, 0, glm::vec3(radius * 2, glm::distance(p1, p2), radius * 2));
 }
+
+void EntityFactory::addSphere(glm::vec3 p, float radius){
+	int entity = entityManager.createEntity();
+	colliderComponentManager.addSphere(entity, p, radius);
+	transformComponentManager.add(entity, p, glm::vec3(0));
+	renderComponentManager.add(entity, 1, glm::vec3(radius));
+}

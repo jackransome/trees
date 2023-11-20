@@ -90,7 +90,7 @@ void main() {
     //outColor = fragColor + vec4(test, 1);// texture(texSampler, fragTexCoord);
 	vec3 tex = texture(texSampler, fragTexCoord).rgb;
 	vec3 lightColor = vec3(1,1,1);
-	vec3 lightPos = vec3(2,10,2);
+	vec3 lightPos = vec3(50,50,50);
 	vec4 text = texture(texSampler, fragTexCoord);
 	//vec3 objectColor = vec3(text.x, text.y, text.z);
 	vec3 objectColor = vec3(fragColor.x, fragColor.y, fragColor.z);//vec3(0.2,0.4,1);
@@ -127,7 +127,7 @@ void main() {
 
 	vec3 result = (ambient + diffuse + specular) * objectColor;
     outColor = vec4(result, 1.0);
-    float fogDist = 8;
+    float fogDist = 20;
     float distance = max(fogDist - distance(cameraPos, FragPos), 0)/fogDist;
     vec4 fogColour = vec4(0.9,0.9,0.9,1);
     outColor = distance*outColor + (1-distance)*fogColour;

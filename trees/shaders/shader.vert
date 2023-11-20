@@ -24,10 +24,10 @@ layout(location = 2) out vec3 FragPos;
 layout(location = 3) out vec3 Normal;
 layout(location = 4) out vec3 cameraPos;
 
-layout(push_constant) uniform transformData
+/*layout(push_constant) uniform transformData
 {
   int index;
-} object;
+} object;*/
 
 out gl_PerVertex {
     vec4 gl_Position;

@@ -1261,6 +1261,7 @@ void Graphics::createStorageBuffer() {
 void Graphics::updateStorageBuffer() {
 
 	std::vector<glm::mat4> storageBufferData;
+	
 
 	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * 1;
 	if (totalDrawInstances == 0) {
@@ -1275,21 +1276,23 @@ void Graphics::updateStorageBuffer() {
 		int test1 = 
 		bufferSize = sizeof(storageBufferData[0]) * totalDrawInstances;
 	}
+
 	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_DRAWINSTANCES;
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
+	
 	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
+	
 	void* data;
 	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
 	memcpy(data, storageBufferData.data(), (size_t)bufferSize);
 	vkUnmapMemory(device, stagingBufferMemory);
 
 	copyBuffer(stagingBuffer, storageBuffer, bufferSize);
-
 	vkDestroyBuffer(device, stagingBuffer, nullptr);
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
+
 }
 
 void Graphics::createUniformBuffers() {
@@ -1447,10 +1450,8 @@ void Graphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize s
 	VkBufferCopy copyRegion = {};
 	copyRegion.size = size;
 	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
 	endSingleTimeCommands(commandBuffer);
 }
-
 uint32_t Graphics::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
 	VkPhysicalDeviceMemoryProperties memProperties;
 	vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
@@ -1513,10 +1514,11 @@ void Graphics::createCommandBuffers() {
 		vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 		vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-		for (int j = 0; j < drawInstances.size(); j++) {
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, false ? lineGraphicsPipeline : triangleGraphicsPipeline);
+		//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, triangleGraphicsPipeline);
 
-			vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(int), (void*)&j);
+		for (int j = 0; j < drawInstances.size(); j++) {
+			
+			//vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(int), (void*)&j);
 			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(models[j].size), drawInstances[j].size(), static_cast<uint32_t>(models[j].offset), 0, startingInstanceIDs[j]);
 		}
 
@@ -1597,6 +1599,8 @@ void Graphics::updateUniformBuffer(uint32_t currentImage) {
 }
 
 void Graphics::drawFrame() {
+	updateStartingInstanceIDs();
+
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 	vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
@@ -1613,9 +1617,13 @@ void Graphics::drawFrame() {
 
 	//WHAT IS THIS (camera orb)
 	//objects[0].transformData = glm::translate(glm::mat4(1.0f), cameraPosition);
+	
+
 	updateUniformBuffer(imageIndex);
 	updateStorageBuffer();
+	
 	createCommandBuffers();
+
 
 	VkSubmitInfo submitInfo = {};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -1632,6 +1640,7 @@ void Graphics::drawFrame() {
 	VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signalSemaphores;
+
 
 	if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
 		throw std::runtime_error("failed to submit draw command buffer!");

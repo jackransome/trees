@@ -229,6 +229,9 @@ private:
 
 	float cameraVelocity = 0.5;
 
+	VkBuffer storageStagingBuffer;
+	VkDeviceMemory storageStagingBufferMemory;
+
 	GLFWwindow* window;
 
 	VkInstance instance;

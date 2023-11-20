@@ -39,7 +39,13 @@ void MainSystem::init()
 	renderSystem.init(&gfx, &transformComponentManager, &renderComponentManager);
 	entityFactory.addCylinder(glm::vec3(3), glm::vec3(3, 1, 1), 1);
 	for (int i = 0; i < 990; i++) {
-		entityFactory.addCylinder(glm::vec3(-2), glm::vec3(-4, 2, -2), 0.5);
+		if (i % 3 == 0) {
+			entityFactory.addSphere(glm::vec3(((float)rand() / (float)RAND_MAX) * 10 - 5, ((float)rand() / (float)RAND_MAX) * 10 - 5, ((float)rand() / (float)RAND_MAX) * 10 - 5), ((float)rand() / (float)RAND_MAX) * 3 + 0.5);
+		}
+		else {
+			entityFactory.addCylinder(glm::vec3(((float)rand() / (float)RAND_MAX) * 10 - 5, ((float)rand() / (float)RAND_MAX) * 10 - 5, ((float)rand() / (float)RAND_MAX) * 10 - 5), glm::vec3(((float)rand() / (float)RAND_MAX) * 10 - 5, ((float)rand() / (float)RAND_MAX) * 10 - 5, ((float)rand() / (float)RAND_MAX) * 10 - 5), ((float)rand() / (float)RAND_MAX) * 0.14 + 0.01);
+		}
+
 	}
 	
 	entityFactory.addPlayer(glm::vec3(0));
@@ -96,7 +102,12 @@ void MainSystem::run()
 		draw();
 
 		//execute draws with vulkan
+		//auto start = std::chrono::high_resolution_clock::now();
 		gfx.run();
+		//auto end = std::chrono::high_resolution_clock::now();
+		//std::chrono::duration<double, std::milli> duration = end - start;
+		//std::cout << "gfx.run() duration: " << duration.count() << "ms\n";
+		
 		//std::cout << "running\n";
 	}
 
